@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CombatAction" load_steps=2 format=3 uid="uid://ba55835bnwout"]
+
+[ext_resource type="Script" path="res://Scripts/CombatAction.gd" id="1_pjyn2"]
+
+[resource]
+script = ExtResource("1_pjyn2")
+display_name = "Thunderclap"
+description = ""
+heal = 0
+damage = 6
+nature_type = 5
+damage_type = 0
+attack_type = 0
+attack_style = 1

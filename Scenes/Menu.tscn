@@ -1,0 +1,63 @@
+[gd_scene load_steps=4 format=3 uid="uid://dh41bpvh3lmcx"]
+
+[ext_resource type="Script" path="res://Scripts/Menu.gd" id="1_umfg2"]
+[ext_resource type="Texture2D" uid="uid://brcsld272fjki" path="res://Assets/Background.png" id="2_qmv0e"]
+[ext_resource type="FontFile" uid="uid://d2wv1gaq3j2so" path="res://Assets/prstart.ttf" id="3_inkdd"]
+
+[node name="Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_umfg2")
+
+[node name="Image_Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_qmv0e")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Label_Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -337.5
+offset_top = 25.0
+offset_right = 337.5
+offset_bottom = 101.0
+grow_horizontal = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 15
+theme_override_fonts/font = ExtResource("3_inkdd")
+theme_override_font_sizes/font_size = 75
+text = "Micro RPG"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button_PlayGame" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -92.0
+offset_top = -36.5
+offset_right = 92.0
+offset_bottom = 36.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_inkdd")
+theme_override_font_sizes/font_size = 40
+text = "Play
+"
+
+[connection signal="pressed" from="Button_PlayGame" to="." method="_on_button_play_game_pressed"]

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="CombatAction" load_steps=2 format=3 uid="uid://dotkujv1jd70k"]
+
+[ext_resource type="Script" path="res://Scripts/CombatAction.gd" id="1_2qka5"]
+
+[resource]
+script = ExtResource("1_2qka5")
+display_name = "Gale Assault"
+description = ""
+heal = 0
+damage = 35
+nature_type = 3
+damage_type = 0
+attack_type = 4
+attack_style = 0
+status_effected = 0
+target = 0
+residual_damage_type = 0
+turns_active = 4

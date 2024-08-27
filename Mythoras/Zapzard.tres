@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="Mythora" load_steps=9 format=3 uid="uid://cq8gms1x8ifnr"]
+
+[ext_resource type="Resource" uid="uid://db2gxuaaelqmi" path="res://Natures/Fire_Nature.tres" id="1_t1a3d"]
+[ext_resource type="Script" path="res://Scripts/Mythora.gd" id="1_ylfkh"]
+[ext_resource type="Script" path="res://Scripts/CombatAction.gd" id="2_dxhru"]
+[ext_resource type="Resource" uid="uid://ba55835bnwout" path="res://CombatActions/Lightning/Thunderclap.tres" id="3_iwffq"]
+[ext_resource type="Resource" uid="uid://bbru0gvv6gboa" path="res://CombatActions/Fire/ScorchingEmber.tres" id="4_u40mr"]
+[ext_resource type="Resource" uid="uid://dotkujv1jd70k" path="res://CombatActions/Wind/GaleAssault.tres" id="6_cmccw"]
+[ext_resource type="Resource" uid="uid://bkkj8huji8r2g" path="res://CombatActions/Earth/HeavyFeet.tres" id="7_t4w8i"]
+[ext_resource type="Texture2D" uid="uid://cfbteq3dqyi4c" path="res://Sprites/Reptile.png" id="8_gtah6"]
+
+[resource]
+script = ExtResource("1_ylfkh")
+display_name = "Zapzard"
+nature = ExtResource("1_t1a3d")
+move_set_dict = {}
+starting_combat_actions = Array[ExtResource("2_dxhru")]([ExtResource("4_u40mr"), ExtResource("3_iwffq"), ExtResource("6_cmccw"), ExtResource("7_t4w8i")])
+visual = ExtResource("8_gtah6")
+hp = 35
+speed = 90
+armor = 30
+magic_resist = 40
+attack_damage = 55
+ability_power = 50

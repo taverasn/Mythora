@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CombatAction" load_steps=2 format=3 uid="uid://bkkj8huji8r2g"]
+
+[ext_resource type="Script" path="res://Scripts/CombatAction.gd" id="1_6u1jn"]
+
+[resource]
+script = ExtResource("1_6u1jn")
+display_name = "Heavy Feet"
+description = ""
+heal = 0
+damage = 0
+nature_type = 4
+damage_type = 1
+attack_type = 2
+attack_style = 0
+status_effected = 2
+target = 0

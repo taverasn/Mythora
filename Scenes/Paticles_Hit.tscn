@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://6scqq44p0efh"]
+
+[ext_resource type="Texture2D" uid="uid://csdi4esmtmwyk" path="res://Assets/Circle.png" id="1_kru6p"]
+
+[sub_resource type="Curve" id="Curve_wn71y"]
+_data = [Vector2(0, 0.990525), 0.0, 0.0, 0, 0, Vector2(1, 0.0240526), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="Paticles_Hit" type="CPUParticles2D"]
+emitting = false
+amount = 20
+lifetime = 0.7
+one_shot = true
+explosiveness = 1.0
+texture = ExtResource("1_kru6p")
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 175.0
+initial_velocity_max = 175.0
+scale_amount_min = 0.4
+scale_amount_max = 0.6
+scale_amount_curve = SubResource("Curve_wn71y")

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CombatAction" load_steps=2 format=3 uid="uid://thhy743jksg2"]
+
+[ext_resource type="Script" path="res://Scripts/CombatAction.gd" id="1_l7syy"]
+
+[resource]
+script = ExtResource("1_l7syy")
+display_name = "Stomp"
+description = null
+heal = null
+damage = 8
+nature_type = null
+damage_type = null
+attack_type = null
+attack_style = 1
+status_effected = null
+target = null
