@@ -1,5 +1,6 @@
-[gd_resource type="Resource" script_class="CombatAction" load_steps=3 format=3 uid="uid://b4qhwiqhkxfyh"]
+[gd_resource type="Resource" script_class="CombatAction" load_steps=4 format=3 uid="uid://b4qhwiqhkxfyh"]
 
+[ext_resource type="PackedScene" uid="uid://c42qbrmswk5g1" path="res://Scenes/HitParticles/Lightning_HitParticles.tscn" id="1_1grw0"]
 [ext_resource type="PackedScene" uid="uid://blpca45igmxp8" path="res://Scenes/Projectile_Fireball.tscn" id="1_hdas0"]
 [ext_resource type="Script" path="res://Scripts/CombatAction.gd" id="1_o3apc"]
 
@@ -7,6 +8,7 @@
 script = ExtResource("1_o3apc")
 display_name = "Stormstrike"
 description = ""
+hit_particles = ExtResource("1_1grw0")
 heal = 0
 damage = 6
 projectile_scene = ExtResource("1_hdas0")
@@ -14,3 +16,7 @@ nature_type = 5
 damage_type = 0
 attack_type = 0
 attack_style = 2
+status_effected = 0
+target = 0
+residual_damage_type = 0
+turns_active = 0

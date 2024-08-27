@@ -40,12 +40,3 @@ func effectiveness(nature_type : NatureType) -> Effectiveness:
 			return Effectiveness.Neutral
 	return Effectiveness.None
 	
-func damage_defense_multiplier(e : Effectiveness) -> float:
-	match e:
-		Effectiveness.Weak:
-			return 0.5
-		Effectiveness.Neutral:
-			return 1
-		Effectiveness.Strong:
-			return 2
-	return 1

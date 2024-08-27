@@ -1,14 +1,20 @@
-[gd_resource type="Resource" script_class="CombatAction" load_steps=2 format=3 uid="uid://ba55835bnwout"]
+[gd_resource type="Resource" script_class="CombatAction" load_steps=3 format=3 uid="uid://ba55835bnwout"]
 
+[ext_resource type="PackedScene" uid="uid://c42qbrmswk5g1" path="res://Scenes/HitParticles/Lightning_HitParticles.tscn" id="1_05io2"]
 [ext_resource type="Script" path="res://Scripts/CombatAction.gd" id="1_pjyn2"]
 
 [resource]
 script = ExtResource("1_pjyn2")
 display_name = "Thunderclap"
 description = ""
+hit_particles = ExtResource("1_05io2")
 heal = 0
 damage = 6
 nature_type = 5
 damage_type = 0
 attack_type = 0
 attack_style = 1
+status_effected = 0
+target = 0
+residual_damage_type = 0
+turns_active = 0

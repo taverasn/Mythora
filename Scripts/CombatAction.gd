@@ -7,11 +7,12 @@ enum DamageType {
 }
 
 enum AttackType {
-	Damage = 0,
+	Regular = 0,
 	Heal = 1,
 	Status = 2,
 	ResidualDamage = 3,
-	MultiMoveDamage = 4
+	MultiMoveDamage = 4,
+	Status_Condition = 5
 }
 
 enum AttackStyle {
@@ -38,6 +39,8 @@ enum Target {
 @export_category("General")
 @export var display_name : String = "Action (x DMG)"
 @export var description : String
+@export var hit_particles : PackedScene
+
 
 @export_category("Damage")
 @export var heal : int = 0
@@ -55,3 +58,6 @@ enum Target {
 @export_category("Residual Damage")
 @export var residual_damage_type : ResidualDamageMove.ResidualDamageType
 @export var turns_active : int
+
+@export_category("Status Condition")
+@export var status_condition : StatusCondition.StatusConditionType

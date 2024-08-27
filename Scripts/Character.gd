@@ -9,7 +9,6 @@ signal on_die(character : Area2D)
 signal on_combat_action_selected(combat_action : CombatAction, character : Area2D)
 
 @export var mythora_data : Mythora
-@export var hit_particles : PackedScene
 var combat_actions : Array[CombatAction]
 var nature : Nature
 @export var opponent : Area2D
@@ -29,6 +28,7 @@ var start_position : Vector2
 var attack_opponent : bool
 var current_combat_action : CombatAction
 var stats : CharacterStats
+var current_status_conditions : Array[StatusCondition]
 
 func _ready():
 	start_position = position
@@ -65,12 +65,15 @@ func _process(delta):
 	if position.x == opponent.position.x and attack_opponent:
 		attack_opponent = false
 		opponent.take_damage(current_combat_action)
-
-func take_damage(action : CombatAction) -> void:
+		
+func instantiate_hit_particles(hit_particles : PackedScene) -> void:
 	var hit_particles_instance : CPUParticles2D = hit_particles.instantiate()
 	get_parent().add_child(hit_particles_instance)
 	hit_particles_instance.position = position
 	hit_particles_instance.emitting = true
+
+func take_damage(action : CombatAction) -> void:
+	instantiate_hit_particles(action.hit_particles)
 	
 	# Adjust Damage Based on Type of Nature, Damage and Defenses
 	var damage = calculate_damage(action)
@@ -83,7 +86,7 @@ func take_damage(action : CombatAction) -> void:
 		die()
 		
 func calculate_damage(combat_action : CombatAction) -> int:
-	var damage = combat_action.damage * nature.damage_defense_multiplier(nature.effectiveness(combat_action.nature_type))
+	var damage = combat_action.damage * DamageHelpers.damage_defense_multiplier(nature.effectiveness(combat_action.nature_type))
 	var damage_factor : float = ((float(2) * float(cur_level) / float(5))) + 2
 	var attack_defense_ratio : CombatAction.DamageType
 	
@@ -92,7 +95,7 @@ func calculate_damage(combat_action : CombatAction) -> int:
 	else:
 		attack_defense_ratio = opponent.mythora_data.ability_power / mythora_data.magic_resist
 	
-	var damage_as_float : float = (damage_factor * float(damage) * attack_defense_ratio) / 50 + 2
+	var damage_as_float : float = (damage_factor * float(damage) * attack_defense_ratio) / 50.0 + 2.0
 	
 	return int(damage_as_float)
 
@@ -102,27 +105,23 @@ func die() -> void:
 	queue_free()
 
 func heal(combat_action : CombatAction) -> void:
+	instantiate_hit_particles(combat_action.hit_particles)
 	current_health += combat_action.heal
-	
 	if current_health > max_health:
 		current_health = max_health
 	emit_signal("on_health_change")
 
 func cast_combat_action(combat_action : CombatAction) -> void:
 	current_combat_action = combat_action
-	if combat_action.attack_style == CombatAction.AttackStyle.Melee:
-		get_parent().get_node("Hit").play()
-		attack_opponent = true
-	elif combat_action.attack_style == CombatAction.AttackStyle.Ranged:
-		var projectile_instance : Sprite2D = combat_action.projectile_scene.instantiate()
-		projectile_instance.initialize(opponent, combat_action)
-		get_parent().add_child(projectile_instance)
-		projectile_instance.position = position
-		get_parent().get_node("Fireball").play()
+	if combat_action.attack_type == CombatAction.AttackType.Regular:
+		attack_style(combat_action)
 	elif combat_action.heal > 0:
 		heal(combat_action)
 	elif combat_action.attack_type == CombatAction.AttackType.Status:
-		opponent.change_stat(combat_action)
+		if combat_action.target == CombatAction.Target.Opponent:
+			opponent.change_stat(combat_action)
+		else:
+			change_stat(combat_action)
 	elif combat_action.attack_type == CombatAction.AttackType.ResidualDamage:
 		opponent.take_residual_damage(combat_action)
 	elif combat_action.attack_type == CombatAction.AttackType.MultiMoveDamage:
@@ -135,7 +134,24 @@ func cast_combat_action(combat_action : CombatAction) -> void:
 		if turns_multi_move_damage_active == 0:
 			has_multi_move_damage_active = false
 		
+		attack_style(combat_action)
 		opponent.take_damage(combat_action)
+	elif combat_action.attack_type == CombatAction.AttackType.Status_Condition:
+		opponent.handle_status_condition(combat_action)
+
+func handle_status_condition(combat_action : CombatAction) -> void:
+	# Prevent Duplicate Conditions and From Having More Than 2 Status Conditions
+	if current_status_conditions.size() > 0:
+		if current_status_conditions[0].status_condition == combat_action.status_condition || current_status_conditions.size() >= 2:
+			return
+	
+	var status_condition : StatusCondition = StatusCondition.new(combat_action.status_condition, combat_action.nature_type)
+	
+	current_status_conditions.append(status_condition)
+	
+	var damage_defense_multiplier : float = status_condition.percentage_effected * DamageHelpers.damage_defense_multiplier(nature.effectiveness(combat_action.nature_type))
+	for s in status_condition.statuses_effected:
+		stats.stats[s] = int(float(stats.get_stat(s)) - (float(stats.get_stat(s)) * damage_defense_multiplier))
 
 func take_residual_damage(combat_action : CombatAction) -> void:
 	var residual_damage_move : ResidualDamageMove
@@ -161,7 +177,20 @@ func take_residual_damage(combat_action : CombatAction) -> void:
 		residual_damage_move = null
 	
 
+func attack_style(combat_action : CombatAction) -> void:
+	if combat_action.attack_style == CombatAction.AttackStyle.Melee:
+		get_parent().get_node("Hit").play()
+		attack_opponent = true
+	elif combat_action.attack_style == CombatAction.AttackStyle.Ranged:
+		var projectile_instance : Sprite2D = combat_action.projectile_scene.instantiate()
+		projectile_instance.initialize(opponent, combat_action)
+		get_parent().add_child(projectile_instance)
+		projectile_instance.position = position
+		get_parent().get_node("Fireball").play()
+
 func change_stat(combat_action : CombatAction):
+	instantiate_hit_particles(combat_action.hit_particles)
+	
 	var status_effect_percentage : float
 	match nature.effectiveness(combat_action.nature_type):
 		Nature.Effectiveness.Weak:
@@ -171,19 +200,7 @@ func change_stat(combat_action : CombatAction):
 		Nature.Effectiveness.Neutral:
 			status_effect_percentage = 0.2
 	
-	match combat_action.status_effected:
-		CombatAction.Status.HP:
-			stats.hp = int(float(stats.hp) - (float(stats.hp) * status_effect_percentage))
-		CombatAction.Status.Speed:
-			stats.speed = int(float(stats.speed) - (float(stats.speed) * status_effect_percentage))
-		CombatAction.Status.Armor:
-			stats.armor = int(float(stats.armor) - (float(stats.armor) * status_effect_percentage))
-		CombatAction.Status.Magic_Resist:
-			stats.magic_resist = int(float(stats.magic_resist) - (float(stats.magic_resist) * status_effect_percentage))
-		CombatAction.Status.Attack_Damage:
-			stats.attack_damage = int(float(stats.attack_damage) - (float(stats.attack_damage) * status_effect_percentage))
-		CombatAction.Status.Ability_Power:
-			stats.ability_power = int(float(stats.ability_power) - (float(stats.ability_power) * status_effect_percentage))
+	stats.stats[combat_action.status_effected] = int(float(stats.get_stat(combat_action.status_effected)) - (float(combat_action.status_effected) * status_effect_percentage))
 
 
 func on_begin_turn() -> void:
@@ -203,8 +220,8 @@ func determine_combat_action() -> void:
 	
 	if want_to_heal && has_combat_action_type(CombatAction.AttackType.Heal):
 		ca = get_combat_action_of_type(CombatAction.AttackType.Heal)
-	elif has_combat_action_type(CombatAction.AttackType.Damage):
-		ca = get_combat_action_of_type(CombatAction.AttackType.Damage)
+	else:
+		ca = get_combat_action()
 	
 	if ca != null:
 		emit_signal("on_combat_action_selected", ca, self)
@@ -227,6 +244,15 @@ func get_combat_action_of_type(type : CombatAction.AttackType) -> CombatAction:
 	
 	for element in combat_actions:
 		if element.attack_type == type:
+			available_actions.append(element)
+	
+	return available_actions[randi() % available_actions.size()]
+
+func get_combat_action() -> CombatAction:
+	var available_actions : Array[CombatAction] = []
+	
+	for element in combat_actions:
+		if element.attack_type != CombatAction.AttackType.Heal:
 			available_actions.append(element)
 	
 	return available_actions[randi() % available_actions.size()]
