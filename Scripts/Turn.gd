@@ -9,6 +9,10 @@ func _init(_caster : Character, _combat_action : CombatAction, _turns : int):
 	caster = _caster
 	combat_action = _combat_action
 	turns = _turns
+	
+	if turns > 0 and combat_action.attack_type == CombatAction.AttackType.ResidualDamage:
+		if combat_action.attack_type == CombatAction.AttackType.ResidualDamage:
+			caster.casted_residual_damage_active = true
 
 func cast_combat_action() -> String:
 	var combat_text = CombatText.get_combat_text(combat_action, 
@@ -20,6 +24,9 @@ func cast_combat_action() -> String:
 	caster.cast_combat_action(combat_action)
 	
 	turns -= 1
+	
+	if turns <= 0 and combat_action.attack_type == CombatAction.AttackType.ResidualDamage:
+		caster.casted_residual_damage_active = false
 	
 	if first_turn:
 		first_turn = false

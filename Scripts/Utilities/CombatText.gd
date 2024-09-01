@@ -21,7 +21,7 @@ static func get_combat_text(combat_action : CombatAction, damage : int, dealer :
 	
 	return combat_text
 
-static func get_status_effect_text(status : CombatAction.Status, target : CombatAction.Target, effectiveness : Nature.Effectiveness, dealer : String, receiver : String) -> String:
+static func get_status_effect_text(status : CharacterStats.Stat, target : CombatAction.Target, effectiveness : Nature.Effectiveness, dealer : String, receiver : String) -> String:
 	var status_effect_text : String
 	
 	match target:
@@ -31,19 +31,19 @@ static func get_status_effect_text(status : CombatAction.Status, target : Combat
 			status_effect_text = dealer + "'s"
 	
 	match status:
-		CombatAction.Status.HP:
+		CharacterStats.Stat.HP:
 			status_effect_text += " HP will be reduced by"
-		CombatAction.Status.Speed:
+		CharacterStats.Stat.Speed:
 			status_effect_text += " Speed will be reduced by"
-		CombatAction.Status.Armor:
+		CharacterStats.Stat.Armor:
 			status_effect_text += " Armor will be reduced by"
-		CombatAction.Status.Magic_Resist:
+		CharacterStats.Stat.Magic_Resist:
 			status_effect_text += " Magic Resist will be reduced by"
-		CombatAction.Status.Attack_Damage:
+		CharacterStats.Stat.Attack_Damage:
 			status_effect_text += " Attack Damage will be reduced by"
-		CombatAction.Status.Ability_Power:
+		CharacterStats.Stat.Ability_Power:
 			status_effect_text += " Ability Power will be reduced by"
-		CombatAction.Status.None:
+		CharacterStats.Stat.None:
 			return ""
 	
 	match effectiveness:
@@ -118,7 +118,7 @@ static func get_status_condition_text(combat_action : CombatAction, effectivenes
 		if i > 0:
 			status_condition_text += " and"
 		
-		status_condition_text = str(status_condition_text, " ", CombatAction.Status.keys()[status_condition.statuses_effected[i]].replace("_", " "))
+		status_condition_text = str(status_condition_text, " ", CharacterStats.Stat.keys()[status_condition.statuses_effected[i]].replace("_", " "))
 	
 	status_condition_text = str(status_condition_text, " Lowered By ", percentage_effected, "%.")
 	
