@@ -1,6 +1,14 @@
 extends Resource
 class_name CombatAction
 
+enum TurnType
+{
+	CombatAction,
+	MythoraSwap,
+	ItemUsage,
+	LeaveCombat,
+}
+
 enum DamageType {
 	Physical,
 	Magic
@@ -31,6 +39,7 @@ enum Target {
 @export var description : String
 @export var hit_particles : PackedScene
 @export var turns_active : int = 1
+@export var turn_type : TurnType
 
 @export_category("Damage")
 @export var heal : int = 0

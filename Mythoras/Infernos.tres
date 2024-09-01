@@ -11,7 +11,7 @@
 
 [resource]
 script = ExtResource("1_ylfkh")
-display_name = "Zapzard"
+display_name = "Infernos"
 nature = ExtResource("1_t1a3d")
 move_set_dict = {}
 starting_combat_actions = Array[ExtResource("2_dxhru")]([ExtResource("4_u40mr"), ExtResource("5_bay8k"), ExtResource("6_cmccw"), ExtResource("7_t4w8i")])

@@ -7,8 +7,11 @@ signal on_health_change
 signal on_die(character : Area2D)
 @warning_ignore("unused_signal")
 signal on_combat_action_selected(combat_action : CombatAction, character : Area2D)
+@warning_ignore("unused_signal")
+signal on_mythora_swap_selected(_mythora_data : Mythora_Res, character : Area2D)
 
-@export var mythora_data : Mythora
+@export var mythora_team : Array[Mythora_Res]
+var mythora_data : Mythora_Res
 var combat_actions : Array[CombatAction]
 var nature : Nature
 
@@ -28,36 +31,38 @@ var initial_stats : CharacterStats
 var current_status_conditions : Array[StatusCondition]
 var casted_residual_damage_active : bool
 
-func set_up() -> void:
+func set_up(_mythora_data : Mythora_Res) -> void:
 	current_stats = CharacterStats.new(
-		mythora_data.hp,
-		mythora_data.speed,
-		mythora_data.armor,
-		mythora_data.magic_resist,
-		mythora_data.attack_damage,
-		mythora_data.ability_power)
+		_mythora_data.hp,
+		_mythora_data.speed,
+		_mythora_data.armor,
+		_mythora_data.magic_resist,
+		_mythora_data.attack_damage,
+		_mythora_data.ability_power)
 		
 	initial_stats = CharacterStats.new(
-		mythora_data.hp,
-		mythora_data.speed,
-		mythora_data.armor,
-		mythora_data.magic_resist,
-		mythora_data.attack_damage,
-		mythora_data.ability_power)
+		_mythora_data.hp,
+		_mythora_data.speed,
+		_mythora_data.armor,
+		_mythora_data.magic_resist,
+		_mythora_data.attack_damage,
+		_mythora_data.ability_power)
 
 func _ready():
-	set_up()
-	
 	start_position = position
 	get_parent().connect("on_begin_turn", on_begin_turn)
-	
-	$Sprite2D.texture = mythora_data.visual
 	$Sprite2D.flip_h = !is_player
 	
+	set_up_mythora(mythora_team[0])
+
+func set_up_mythora(_mythora_data : Mythora_Res) -> void:
+	mythora_data = _mythora_data
+	set_up(mythora_data)
+	$Sprite2D.texture = mythora_data.visual
 	combat_actions = mythora_data.starting_combat_actions
 	nature = mythora_data.nature
-	
 	emit_signal("on_health_change")
+	
 
 func _process(delta):
 	if attack_opponent:
@@ -177,6 +182,9 @@ func on_begin_turn() -> void:
 
 func combat_action_selected(combat_action : CombatAction) -> void:
 	emit_signal("on_combat_action_selected", combat_action, self)
+
+func mythora_swap_selected(_mythora_data : Mythora_Res) -> void:
+	emit_signal("on_mythora_swap_selected", _mythora_data, self)
 
 func get_health_percentage() -> float:
 	return float(current_stats.get_stat(CharacterStats.Stat.HP)) / float(initial_stats.get_stat(CharacterStats.Stat.HP)) * 100

@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://b3d7628yviddv"]
+[gd_scene load_steps=28 format=3 uid="uid://b3d7628yviddv"]
 
 [ext_resource type="Script" path="res://Scripts/TurnManager.gd" id="1_n8bal"]
 [ext_resource type="Texture2D" uid="uid://brcsld272fjki" path="res://Assets/Background.png" id="1_of3bj"]
@@ -6,10 +6,14 @@
 [ext_resource type="FontFile" uid="uid://d2wv1gaq3j2so" path="res://Assets/prstart.ttf" id="2_u3vji"]
 [ext_resource type="Script" path="res://Scripts/Character.gd" id="3_siv1e"]
 [ext_resource type="Resource" uid="uid://bdwoc5qqaqgt3" path="res://Mythoras/Tempestrix.tres" id="6_b21p8"]
+[ext_resource type="Script" path="res://Scripts/Mythora.gd" id="6_tt8yd"]
+[ext_resource type="Resource" uid="uid://dhdo6t4vmpy3f" path="res://Mythoras/Galehorn.tres" id="7_2k814"]
 [ext_resource type="Texture2D" uid="uid://cfbteq3dqyi4c" path="res://Sprites/Reptile.png" id="8_lx4cl"]
+[ext_resource type="Resource" uid="uid://buqaywn4jj2ab" path="res://Mythoras/Geomor.tres" id="8_pi58d"]
 [ext_resource type="Script" path="res://Scripts/Enemy.gd" id="9_bckjc"]
+[ext_resource type="Resource" uid="uid://b2w7huprf7jkb" path="res://Mythoras/Stormraith.tres" id="10_87nkj"]
 [ext_resource type="Script" path="res://Scripts/HealthBar.gd" id="10_aa6iv"]
-[ext_resource type="Resource" uid="uid://cq8gms1x8ifnr" path="res://Mythoras/Zapzard.tres" id="10_kim5l"]
+[ext_resource type="Resource" uid="uid://cq8gms1x8ifnr" path="res://Mythoras/Infernos.tres" id="10_kim5l"]
 [ext_resource type="Texture2D" uid="uid://ciop3b51srbnb" path="res://Sprites/Dragon.png" id="11_t5dkx"]
 [ext_resource type="AudioStream" uid="uid://thfacy7og7v7" path="res://Assets/Audio/Death.ogg" id="13_6bhb0"]
 [ext_resource type="AudioStream" uid="uid://dykwssxpv2v8i" path="res://Assets/Audio/Fireball.ogg" id="14_00gr6"]
@@ -56,7 +60,7 @@ next_turn_delay = 0.5
 player_character = NodePath("Player")
 enemy_character = NodePath("Enemy")
 
-[node name="UI" type="Control" parent="." node_paths=PackedStringArray("container", "combat_action_buttons")]
+[node name="UI" type="Control" parent="." node_paths=PackedStringArray("container", "combat_action_buttons", "mythora_swap_buttons", "mythora_team_container", "combat_actions_container", "actions_container", "action_buttons", "combat_action_button", "team_action_button", "bag_action_button", "flee_action_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -65,7 +69,16 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_iki2n")
 container = NodePath("Color_Background/Color_CombatActionsListBackground")
-combat_action_buttons = [NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/VBoxContainer/Button_CombatAction"), NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/VBoxContainer/Button_CombatAction2"), NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/VBoxContainer/Button_CombatAction3"), NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/VBoxContainer/Button_CombatAction4")]
+combat_action_buttons = [NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/CombatActions/Button_CombatAction"), NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/CombatActions/Button_CombatAction2"), NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/CombatActions/Button_CombatAction3"), NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/CombatActions/Button_CombatAction4")]
+mythora_swap_buttons = [NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/MythoraSelectionButtons/Button_Mythora"), NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/MythoraSelectionButtons/Button_Mythora2"), NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/MythoraSelectionButtons/Button_Mythora3"), NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/MythoraSelectionButtons/Button_Mythora4")]
+mythora_team_container = NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/MythoraSelectionButtons")
+combat_actions_container = NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/CombatActions")
+actions_container = NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions")
+action_buttons = [NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions/Button_Combat"), NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions/Button_Team"), NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions/Button_Bag"), NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions/Button_Flee")]
+combat_action_button = NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions/Button_Combat")
+team_action_button = NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions/Button_Team")
+bag_action_button = NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions/Button_Bag")
+flee_action_button = NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions/Button_Flee")
 
 [node name="Image_Background" type="TextureRect" parent="UI"]
 layout_mode = 1
@@ -112,11 +125,56 @@ theme_override_constants/margin_top = 3
 theme_override_constants/margin_right = 3
 theme_override_constants/margin_bottom = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer"]
+[node name="Actions" type="VBoxContainer" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="Button_CombatAction" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/VBoxContainer"]
+[node name="Button_Combat" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("2_u3vji")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/disabled = SubResource("StyleBoxFlat_yepgq")
+theme_override_styles/hover = SubResource("StyleBoxFlat_lvj4v")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1ohqb")
+text = "Combat"
+
+[node name="Button_Team" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("2_u3vji")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/disabled = SubResource("StyleBoxFlat_rf3r6")
+theme_override_styles/hover = SubResource("StyleBoxFlat_lvj4v")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1ohqb")
+text = "Team"
+
+[node name="Button_Bag" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("2_u3vji")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/disabled = SubResource("StyleBoxFlat_rf3r6")
+theme_override_styles/hover = SubResource("StyleBoxFlat_lvj4v")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1ohqb")
+text = "Bag"
+
+[node name="Button_Flee" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("2_u3vji")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/disabled = SubResource("StyleBoxFlat_rf3r6")
+theme_override_styles/hover = SubResource("StyleBoxFlat_lvj4v")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1ohqb")
+text = "Flee"
+
+[node name="CombatActions" type="VBoxContainer" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Button_CombatAction" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/CombatActions"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_fonts/font = ExtResource("2_u3vji")
@@ -126,7 +184,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_lvj4v")
 theme_override_styles/normal = SubResource("StyleBoxFlat_1ohqb")
 text = "Combat Action Display Name"
 
-[node name="Button_CombatAction2" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/VBoxContainer"]
+[node name="Button_CombatAction2" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/CombatActions"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_fonts/font = ExtResource("2_u3vji")
@@ -136,7 +194,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_lvj4v")
 theme_override_styles/normal = SubResource("StyleBoxFlat_1ohqb")
 text = "Combat Action Display Name"
 
-[node name="Button_CombatAction3" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/VBoxContainer"]
+[node name="Button_CombatAction3" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/CombatActions"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_fonts/font = ExtResource("2_u3vji")
@@ -146,7 +204,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_lvj4v")
 theme_override_styles/normal = SubResource("StyleBoxFlat_1ohqb")
 text = "Combat Action Display Name"
 
-[node name="Button_CombatAction4" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/VBoxContainer"]
+[node name="Button_CombatAction4" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/CombatActions"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_fonts/font = ExtResource("2_u3vji")
@@ -155,6 +213,51 @@ theme_override_styles/disabled = SubResource("StyleBoxFlat_rf3r6")
 theme_override_styles/hover = SubResource("StyleBoxFlat_lvj4v")
 theme_override_styles/normal = SubResource("StyleBoxFlat_1ohqb")
 text = "Combat Action Display Name"
+
+[node name="MythoraSelectionButtons" type="VBoxContainer" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Button_Mythora" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/MythoraSelectionButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("2_u3vji")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/disabled = SubResource("StyleBoxFlat_yepgq")
+theme_override_styles/hover = SubResource("StyleBoxFlat_lvj4v")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1ohqb")
+text = "Zephyros"
+
+[node name="Button_Mythora2" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/MythoraSelectionButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("2_u3vji")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/disabled = SubResource("StyleBoxFlat_rf3r6")
+theme_override_styles/hover = SubResource("StyleBoxFlat_lvj4v")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1ohqb")
+text = "Zephyros"
+
+[node name="Button_Mythora3" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/MythoraSelectionButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("2_u3vji")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/disabled = SubResource("StyleBoxFlat_rf3r6")
+theme_override_styles/hover = SubResource("StyleBoxFlat_lvj4v")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1ohqb")
+text = "Zephyros"
+
+[node name="Button_Mythora4" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer/MythoraSelectionButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("2_u3vji")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/disabled = SubResource("StyleBoxFlat_rf3r6")
+theme_override_styles/hover = SubResource("StyleBoxFlat_lvj4v")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1ohqb")
+text = "Zephyros"
 
 [node name="Color_CombatTextBackground" type="ColorRect" parent="UI/Color_Background"]
 layout_mode = 1
@@ -191,7 +294,7 @@ text = "Tempestrix used Stomp!"
 [node name="Player" type="Area2D" parent="." node_paths=PackedStringArray("opponent")]
 position = Vector2(164, 176)
 script = ExtResource("3_siv1e")
-mythora_data = ExtResource("10_kim5l")
+mythora_team = Array[ExtResource("6_tt8yd")]([ExtResource("7_2k814"), ExtResource("8_pi58d"), ExtResource("10_kim5l"), ExtResource("10_87nkj")])
 opponent = NodePath("../Enemy")
 is_player = true
 
@@ -246,7 +349,7 @@ vertical_alignment = 1
 [node name="Enemy" type="Area2D" parent="." node_paths=PackedStringArray("opponent")]
 position = Vector2(760, 176)
 script = ExtResource("9_bckjc")
-mythora_data = ExtResource("6_b21p8")
+mythora_team = Array[ExtResource("6_tt8yd")]([ExtResource("6_b21p8")])
 opponent = NodePath("../Player")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy"]

@@ -123,3 +123,8 @@ static func get_status_condition_text(combat_action : CombatAction, effectivenes
 	status_condition_text = str(status_condition_text, " Lowered By ", percentage_effected, "%.")
 	
 	return status_condition_text
+
+static func get_swap_text(caster : Character, new_mythora : Mythora_Res) -> String:
+	var swap_text : String = str(caster.mythora_data.display_name, " is being swapped out for ", new_mythora.display_name)
+	
+	return swap_text

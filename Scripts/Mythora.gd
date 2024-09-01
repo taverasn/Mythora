@@ -1,5 +1,5 @@
 extends Resource
-class_name Mythora
+class_name Mythora_Res
 
 @export var display_name : String
 @export var nature : Nature
