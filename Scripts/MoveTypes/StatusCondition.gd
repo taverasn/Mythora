@@ -22,7 +22,7 @@ enum StatusConditionType {
 var status_condition : StatusConditionType
 var percentage_effected : float
 var increased_per_turn : bool
-var statuses_effected : Array[CombatAction.Status]
+var statuses_effected : Array[CharacterStats.Stat]
 var nature : Nature.NatureType
 
 func _init(_status_condition : StatusConditionType, _nature : Nature.NatureType):
@@ -31,17 +31,17 @@ func _init(_status_condition : StatusConditionType, _nature : Nature.NatureType)
 	
 	match _status_condition:
 		StatusConditionType.Burnout:
-			set_up(0.05, [CombatAction.Status.Attack_Damage, CombatAction.Status.Ability_Power], true)
+			set_up(0.05, [CharacterStats.Stat.Attack_Damage, CharacterStats.Stat.Ability_Power], true)
 		StatusConditionType.Shocked:
 			set_up(0.5)
 		StatusConditionType.Winded:
-			set_up(0.2, [CombatAction.Status.Speed])
+			set_up(0.2, [CharacterStats.Stat.Speed])
 		StatusConditionType.Soaked:
-			set_up(0.1, [CombatAction.Status.Speed, CombatAction.Status.Armor, CombatAction.Status.Magic_Resist])
+			set_up(0.1, [CharacterStats.Stat.Speed, CharacterStats.Stat.Armor, CharacterStats.Stat.Magic_Resist])
 		StatusConditionType.Petrify:
-			set_up(0.1, [CombatAction.Status.Speed, CombatAction.Status.Attack_Damage, CombatAction.Status.Ability_Power])
+			set_up(0.1, [CharacterStats.Stat.Speed, CharacterStats.Stat.Attack_Damage, CharacterStats.Stat.Ability_Power])
 
-func set_up(_percentage_effected : float, _statuses_effected : Array[CombatAction.Status] = [], _increased_per_turn : bool = false) -> void:
+func set_up(_percentage_effected : float, _statuses_effected : Array[CharacterStats.Stat] = [], _increased_per_turn : bool = false) -> void:
 	self.percentage_effected = _percentage_effected
 	self.statuses_effected = _statuses_effected
 	self.increased_per_turn = _increased_per_turn

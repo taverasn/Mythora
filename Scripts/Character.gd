@@ -11,11 +11,10 @@ signal on_combat_action_selected(combat_action : CombatAction, character : Area2
 @export var mythora_data : Mythora
 var combat_actions : Array[CombatAction]
 var nature : Nature
+
 @export var opponent : Area2D
 @export var is_player : bool
-@export var character : Area2D
-var current_health : int = 25
-var max_health : int = 25
+
 var cur_level : int
 @export var attack_move_speed : int = 2500
 @export var return_move_speed : int = 1500
@@ -23,23 +22,34 @@ var cur_level : int
 var start_position : Vector2
 var attack_opponent : bool
 var current_combat_action : CombatAction
-var stats : CharacterStats
-var current_status_conditions : Array[StatusCondition]
+var current_stats : CharacterStats
+var initial_stats : CharacterStats
 
-func _ready():
-	start_position = position
-	get_parent().connect("on_begin_turn", on_begin_turn)
-	
-	stats = CharacterStats.new(
+var current_status_conditions : Array[StatusCondition]
+var casted_residual_damage_active : bool
+
+func set_up() -> void:
+	current_stats = CharacterStats.new(
 		mythora_data.hp,
 		mythora_data.speed,
 		mythora_data.armor,
 		mythora_data.magic_resist,
 		mythora_data.attack_damage,
 		mythora_data.ability_power)
+		
+	initial_stats = CharacterStats.new(
+		mythora_data.hp,
+		mythora_data.speed,
+		mythora_data.armor,
+		mythora_data.magic_resist,
+		mythora_data.attack_damage,
+		mythora_data.ability_power)
+
+func _ready():
+	set_up()
 	
-	current_health = mythora_data.hp
-	max_health = mythora_data.hp
+	start_position = position
+	get_parent().connect("on_begin_turn", on_begin_turn)
 	
 	$Sprite2D.texture = mythora_data.visual
 	$Sprite2D.flip_h = !is_player
@@ -74,11 +84,11 @@ func take_damage(action : CombatAction) -> void:
 	# Adjust Damage Based on Type of Nature, Damage and Defenses
 	var damage = calculate_damage(action)
 	
-	current_health -= damage
+	current_stats.stats[CharacterStats.Stat.HP] -= damage
 	
 	emit_signal("on_health_change")
 	
-	if current_health <= 0:
+	if current_stats.get_stat(CharacterStats.Stat.HP) <= 0:
 		die()
 		
 func calculate_damage(combat_action : CombatAction) -> int:
@@ -102,9 +112,9 @@ func die() -> void:
 
 func heal(combat_action : CombatAction) -> void:
 	instantiate_hit_particles(combat_action.hit_particles)
-	current_health += combat_action.heal
-	if current_health > max_health:
-		current_health = max_health
+	current_stats.stats[CharacterStats.Stat.HP] += combat_action.heal
+	if current_stats.get_stat(CharacterStats.Stat.HP) > initial_stats.get_stat(CharacterStats.Stat.HP):
+		current_stats.stats[CharacterStats.Stat.HP] = initial_stats.get_stat(CharacterStats.Stat.HP)
 	emit_signal("on_health_change")
 
 func cast_combat_action(combat_action : CombatAction) -> void:
@@ -135,7 +145,7 @@ func handle_status_condition(combat_action : CombatAction) -> void:
 	
 	var damage_defense_multiplier : float = status_condition.percentage_effected * DamageHelpers.damage_defense_multiplier(nature.effectiveness(combat_action.nature_type))
 	for s in status_condition.statuses_effected:
-		stats.stats[s] = int(float(stats.get_stat(s)) - (float(stats.get_stat(s)) * damage_defense_multiplier))
+		current_stats.stats[s] = int(float(current_stats.get_stat(s)) - (float(current_stats.get_stat(s)) * damage_defense_multiplier))
 
 func attack_style(combat_action : CombatAction) -> void:
 	if combat_action.attack_style == CombatAction.AttackStyle.Melee:
@@ -160,7 +170,7 @@ func change_stat(combat_action : CombatAction):
 		Nature.Effectiveness.Neutral:
 			status_effect_percentage = 0.2
 	
-	stats.stats[combat_action.status_effected] = int(float(stats.get_stat(combat_action.status_effected)) - (float(combat_action.status_effected) * status_effect_percentage))
+	current_stats.stats[combat_action.status_effected] = int(float(current_stats.get_stat(combat_action.status_effected)) - (float(combat_action.status_effected) * status_effect_percentage))
 
 func on_begin_turn() -> void:
 	pass
@@ -169,4 +179,4 @@ func combat_action_selected(combat_action : CombatAction) -> void:
 	emit_signal("on_combat_action_selected", combat_action, self)
 
 func get_health_percentage() -> float:
-	return float(current_health) / float(max_health) * 100
+	return float(current_stats.get_stat(CharacterStats.Stat.HP)) / float(initial_stats.get_stat(CharacterStats.Stat.HP)) * 100

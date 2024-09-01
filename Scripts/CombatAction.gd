@@ -21,16 +21,6 @@ enum AttackStyle {
 	Ranged = 2
 }
 
-enum Status {
-	None = 0,
-	HP = 1,
-	Speed = 2,
-	Armor = 3,
-	Magic_Resist = 4,
-	Attack_Damage = 5,
-	Ability_Power = 6,
-}
-
 enum Target {
 	Opponent = 0,
 	Self = 1
@@ -52,7 +42,7 @@ enum Target {
 @export var attack_style : AttackStyle
 
 @export_category("Status Effect")
-@export var status_effected : Status
+@export var status_effected : CharacterStats.Stat
 @export var target : Target
 
 @export_category("Status Condition")

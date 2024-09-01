@@ -53,7 +53,7 @@ func on_combat_action_selected(combat_action : CombatAction, character : Area2D)
 		next_action()
 
 func set_turn_order() -> void:
-	if player_character.stats.get_stat(CombatAction.Status.Speed) <= enemy_character.stats.get_stat(CombatAction.Status.Speed):
+	if player_character.current_stats.get_stat(CharacterStats.Stat.Speed) <= enemy_character.current_stats.get_stat(CharacterStats.Stat.Speed):
 		add_new_turn(enemy_character, enemy_action)
 		add_new_turn(player_character, player_action)
 	else:
@@ -63,11 +63,14 @@ func set_turn_order() -> void:
 func add_new_turn(caster : Character, combat_action : CombatAction) -> void:
 	var turns_active : int = combat_action.turns_active
 	var add_turn : bool = true
-	if turns.filter(func(t): return t.combat_action.display_name == combat_action.display_name).size() > 0:
-		if combat_action.attack_type == CombatAction.AttackType.ResidualDamage:
-			turns_active = 0
-		elif combat_action.attack_type == CombatAction.AttackType.MultiMoveDamage:
-			add_turn = false
+	
+	for t in turns:
+		if t.caster == caster:
+			if t.combat_action.attack_type == combat_action.attack_type:
+				if t.combat_action.attack_type == CombatAction.AttackType.ResidualDamage:
+					turns_active = 0
+				if combat_action.attack_type == CombatAction.AttackType.MultiMoveDamage:
+					add_turn = false
 	
 	if add_turn:
 		turns.append(Turn.new(caster, combat_action, turns_active))

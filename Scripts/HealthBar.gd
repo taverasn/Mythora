@@ -8,9 +8,7 @@ func _ready():
 	style_box.bg_color = Color("14e114")
 	
 	get_parent().connect("on_health_change", on_update_health)
-	on_update_health()
-	
-	
+
 func on_update_health() -> void:
 	var health_percentage = get_parent().get_health_percentage()
 	var tween = get_tree().create_tween()
@@ -23,4 +21,4 @@ func on_update_health() -> void:
 	else:
 		style_box.bg_color = Color("e11e1e")
 	
-	$ProgressBar/Label.text = str(get_parent().current_health) + " / " + str(get_parent().max_health)
+	$ProgressBar/Label.text = str(get_parent().current_stats.get_stat(CharacterStats.Stat.HP)) + " / " + str(get_parent().initial_stats.get_stat(CharacterStats.Stat.HP))
