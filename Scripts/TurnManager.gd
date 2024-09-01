@@ -36,9 +36,9 @@ func end_turn() -> void:
 	
 	await get_tree().create_timer(next_turn_delay).timeout
 	
-	if remove_turn(player_character, player_action):
+	if remove_turn(player_action):
 		player_action = null
-	if remove_turn(enemy_character, enemy_action):
+	if remove_turn(enemy_action):
 		enemy_action = null
 	begin_next_turn()
 	
@@ -73,13 +73,13 @@ func add_new_turn(caster : Character, combat_action : CombatAction) -> void:
 		turns.append(Turn.new(caster, combat_action, turns_active))
 	
 
-func remove_turn(caster : Character, combat_action) -> bool:
-	var remove_turn : bool = true
+func remove_turn(combat_action) -> bool:
+	var should_remove_turn : bool = true
 	if turns.filter(func(t): return t.combat_action.display_name == combat_action.display_name).size() > 0:
 		if combat_action.attack_type == CombatAction.AttackType.MultiMoveDamage:
-			remove_turn = false
+			should_remove_turn = false
 	
-	return remove_turn
+	return should_remove_turn
 
 func next_action() -> void:
 	if current_turn_index >= turns.size():

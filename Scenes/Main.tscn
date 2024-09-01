@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://b3d7628yviddv"]
+[gd_scene load_steps=24 format=3 uid="uid://b3d7628yviddv"]
 
 [ext_resource type="Script" path="res://Scripts/TurnManager.gd" id="1_n8bal"]
 [ext_resource type="Texture2D" uid="uid://brcsld272fjki" path="res://Assets/Background.png" id="1_of3bj"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://Scripts/Character.gd" id="3_siv1e"]
 [ext_resource type="Resource" uid="uid://bdwoc5qqaqgt3" path="res://Mythoras/Tempestrix.tres" id="6_b21p8"]
 [ext_resource type="Texture2D" uid="uid://cfbteq3dqyi4c" path="res://Sprites/Reptile.png" id="8_lx4cl"]
+[ext_resource type="Script" path="res://Scripts/Enemy.gd" id="9_bckjc"]
 [ext_resource type="Script" path="res://Scripts/HealthBar.gd" id="10_aa6iv"]
 [ext_resource type="Resource" uid="uid://cq8gms1x8ifnr" path="res://Mythoras/Zapzard.tres" id="10_kim5l"]
 [ext_resource type="Texture2D" uid="uid://ciop3b51srbnb" path="res://Sprites/Dragon.png" id="11_t5dkx"]
@@ -244,7 +245,7 @@ vertical_alignment = 1
 
 [node name="Enemy" type="Area2D" parent="." node_paths=PackedStringArray("opponent", "character")]
 position = Vector2(760, 176)
-script = ExtResource("3_siv1e")
+script = ExtResource("9_bckjc")
 mythora_data = ExtResource("6_b21p8")
 opponent = NodePath("../Player")
 character = NodePath(".")
