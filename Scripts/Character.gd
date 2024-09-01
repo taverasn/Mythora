@@ -17,12 +17,8 @@ var nature : Nature
 var current_health : int = 25
 var max_health : int = 25
 var cur_level : int
-var has_multi_move_damage_active : bool
-var turns_multi_move_damage_active : int
 @export var attack_move_speed : int = 2500
 @export var return_move_speed : int = 1500
-
-var active_residual_damages : Array[ResidualDamageMove]
 
 var start_position : Vector2
 var attack_opponent : bool
@@ -123,17 +119,8 @@ func cast_combat_action(combat_action : CombatAction) -> void:
 		else:
 			change_stat(combat_action)
 	elif combat_action.attack_type == CombatAction.AttackType.ResidualDamage:
-		opponent.take_residual_damage(combat_action)
+		opponent.take_damage(combat_action)
 	elif combat_action.attack_type == CombatAction.AttackType.MultiMoveDamage:
-		if !has_multi_move_damage_active:
-			has_multi_move_damage_active = true
-			turns_multi_move_damage_active = combat_action.turns_active
-		
-		turns_multi_move_damage_active -= 1
-		
-		if turns_multi_move_damage_active == 0:
-			has_multi_move_damage_active = false
-		
 		attack_style(combat_action)
 		opponent.take_damage(combat_action)
 	elif combat_action.attack_type == CombatAction.AttackType.Status_Condition:
@@ -152,30 +139,6 @@ func handle_status_condition(combat_action : CombatAction) -> void:
 	var damage_defense_multiplier : float = status_condition.percentage_effected * DamageHelpers.damage_defense_multiplier(nature.effectiveness(combat_action.nature_type))
 	for s in status_condition.statuses_effected:
 		stats.stats[s] = int(float(stats.get_stat(s)) - (float(stats.get_stat(s)) * damage_defense_multiplier))
-
-func take_residual_damage(combat_action : CombatAction) -> void:
-	var residual_damage_move : ResidualDamageMove
-	if active_residual_damages.size() > 0:
-		var index : int = -1
-		
-		for i in range(active_residual_damages.size()):
-			if active_residual_damages[i].display_name == combat_action.display_name:
-				index = i
-				break
-		
-		if index >= 0:
-			residual_damage_move = active_residual_damages[index]
-	
-	if residual_damage_move == null:
-		residual_damage_move = ResidualDamageMove.new(combat_action.turns_active, combat_action.residual_damage_type, combat_action.display_name, combat_action)
-		active_residual_damages.append(residual_damage_move)
-	
-	take_damage(combat_action)
-	residual_damage_move.next_turn()
-	if residual_damage_move.turns_active == 0:
-		active_residual_damages.pop_at(active_residual_damages.find(residual_damage_move))
-		residual_damage_move = null
-	
 
 func attack_style(combat_action : CombatAction) -> void:
 	if combat_action.attack_style == CombatAction.AttackStyle.Melee:

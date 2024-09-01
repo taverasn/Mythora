@@ -40,7 +40,7 @@ enum Target {
 @export var display_name : String = "Action (x DMG)"
 @export var description : String
 @export var hit_particles : PackedScene
-
+@export var turns_active : int = 1
 
 @export_category("Damage")
 @export var heal : int = 0
@@ -54,10 +54,6 @@ enum Target {
 @export_category("Status Effect")
 @export var status_effected : Status
 @export var target : Target
-
-@export_category("Residual Damage")
-@export var residual_damage_type : ResidualDamageMove.ResidualDamageType
-@export var turns_active : int
 
 @export_category("Status Condition")
 @export var status_condition : StatusCondition.StatusConditionType

@@ -5,7 +5,7 @@ signal on_begin_turn
 @warning_ignore("unused_signal")
 signal on_end_turn
 @warning_ignore("unused_signal")
-signal on_attacks_selected(combat_messages : Array[String])
+signal on_next_action_selected(combat_message : String)
 
 @export var next_turn_delay : float
 @export var player_character : Area2D
@@ -14,14 +14,8 @@ signal on_attacks_selected(combat_messages : Array[String])
 var player_action : CombatAction
 var enemy_action : CombatAction
 
-var player_casted : bool
-var enemy_casted : bool
-var player_casted_residual : bool
-var enemy_casted_residual : bool
-var current_player_residual_index : int = 0
-var current_enemy_residual_index : int = 0
-var player_first : bool
-var current_character_index : int = -1
+var turns : Array[Turn]
+var current_turn_index : int
 var game_over : bool
 
 func _ready():
@@ -34,16 +28,17 @@ func begin_next_turn() -> void:
 	
 func end_turn() -> void:
 	emit_signal("on_end_turn")
+	current_turn_index = 0
+	
+	for i in range(turns.size() - 1, -1, -1):
+		if turns[i].turns <= 0:
+			turns.pop_at(i)
+	
 	await get_tree().create_timer(next_turn_delay).timeout
-	player_casted = false
-	enemy_casted = false
-	player_casted_residual = false
-	enemy_casted_residual = false
-	current_enemy_residual_index = 0
-	current_player_residual_index = 0
-	if !player_character.has_multi_move_damage_active:
+	
+	if remove_turn(player_character, player_action):
 		player_action = null
-	if !enemy_character.has_multi_move_damage_active:
+	if remove_turn(enemy_character, enemy_action):
 		enemy_action = null
 	begin_next_turn()
 	
@@ -55,154 +50,42 @@ func on_combat_action_selected(combat_action : CombatAction, character : Area2D)
 	
 	if player_action != null and enemy_action != null:
 		set_turn_order()
-		attack_messages_queue()
+		next_action()
 
 func set_turn_order() -> void:
 	if player_character.stats.get_stat(CombatAction.Status.Speed) <= enemy_character.stats.get_stat(CombatAction.Status.Speed):
-		player_first = false
+		add_new_turn(enemy_character, enemy_action)
+		add_new_turn(player_character, player_action)
 	else:
-		player_first = true
+		add_new_turn(player_character, player_action)
+		add_new_turn(enemy_character, enemy_action)
 
-func attack_messages_queue() -> void:
-	var message_array : Array[String]
-	var is_residual_damage_dealt : bool = false
+func add_new_turn(caster : Character, combat_action : CombatAction) -> void:
+	var turns_active : int = combat_action.turns_active
+	var add_turn : bool = true
+	if turns.filter(func(t): return t.combat_action.display_name == combat_action.display_name).size() > 0:
+		if combat_action.attack_type == CombatAction.AttackType.ResidualDamage:
+			turns_active = 0
+		elif combat_action.attack_type == CombatAction.AttackType.MultiMoveDamage:
+			add_turn = false
 	
-	if player_first:
-		if player_character.active_residual_damages.size() > 0:
-			is_residual_damage_dealt = true
-			player_casted_residual = true
-			current_player_residual_index += 1
-			
-			message_array.append(
-				CombatText.get_combat_text(player_character.active_residual_damages[0].combat_action, 
-				enemy_character.calculate_damage(player_character.active_residual_damages[0].combat_action), 
-				enemy_character,
-				player_character
-				))
-			
-			enemy_character.cast_combat_action(player_character.active_residual_damages[0].combat_action)
-			
-		else:
-			player_casted_residual = true
-		
-		if enemy_character.active_residual_damages.size() > 0:
-			message_array.append(
-			CombatText.get_combat_text(enemy_character.active_residual_damages[0].combat_action, 
-			player_character.calculate_damage(enemy_character.active_residual_damages[0].combat_action), 
-			player_character,
-			enemy_character
-			))
-		else:
-			enemy_casted_residual = true
-		
-	else:
-		if enemy_character.active_residual_damages.size() > 0:
-			is_residual_damage_dealt = true
-			enemy_casted_residual = true
-			current_enemy_residual_index += 1
-			
-			message_array.append(
-			CombatText.get_combat_text(enemy_character.active_residual_damages[0].combat_action, 
-			player_character.calculate_damage(enemy_character.active_residual_damages[0].combat_action), 
-			player_character,
-			enemy_character
-			))
-			
-			player_character.cast_combat_action(enemy_character.active_residual_damages[0].combat_action)
-			
-		else:
-			enemy_casted_residual = true
-		
-		if player_character.active_residual_damages.size() > 0:
-			message_array.append(
-				CombatText.get_combat_text(player_character.active_residual_damages[0].combat_action, 
-				enemy_character.calculate_damage(player_character.active_residual_damages[0].combat_action), 
-				enemy_character,
-				player_character
-				))
-		else:
-			player_casted_residual = true
-			
+	if add_turn:
+		turns.append(Turn.new(caster, combat_action, turns_active))
 	
-	if player_first:
-		if !is_residual_damage_dealt:
-			player_character.cast_combat_action(player_action)
-			player_casted = true
-		
-		message_array.append(
-			CombatText.get_combat_text(player_action, 
-			enemy_character.calculate_damage(player_action), 
-			player_character, 
-			enemy_character))
-			
-		message_array.append(
-			CombatText.get_combat_text(enemy_action, 
-			player_character.calculate_damage(enemy_action), 
-			enemy_character, 
-			player_character))
-	else:
-		if !is_residual_damage_dealt:
-			enemy_character.cast_combat_action(enemy_action)
-			enemy_casted = true
-		
-		message_array.append(
-			CombatText.get_combat_text(enemy_action, 
-			player_character.calculate_damage(enemy_action), 
-			enemy_character, 
-			player_character))
-			
-		message_array.append(
-			CombatText.get_combat_text(player_action, 
-			enemy_character.calculate_damage(player_action), 
-			player_character, 
-			enemy_character))
+
+func remove_turn(caster : Character, combat_action) -> bool:
+	var remove_turn : bool = true
+	if turns.filter(func(t): return t.combat_action.display_name == combat_action.display_name).size() > 0:
+		if combat_action.attack_type == CombatAction.AttackType.MultiMoveDamage:
+			remove_turn = false
 	
-	emit_signal("on_attacks_selected", message_array)
-	
+	return remove_turn
+
 func next_action() -> void:
-	if player_first:
-		if !player_casted_residual:
-			enemy_character.cast_combat_action(player_character.active_residual_damages[current_player_residual_index].combat_action)
-			
-			current_player_residual_index += 1
-			
-			if current_player_residual_index >= player_character.active_residual_damages.size():
-				player_casted_residual = true
-			
-		elif !enemy_casted_residual:
-			player_character.cast_combat_action(enemy_character.active_residual_damages[current_enemy_residual_index].combat_action)
-			
-			current_enemy_residual_index += 1
-			
-			if current_enemy_residual_index >= enemy_character.active_residual_damages.size():
-				enemy_casted_residual = true
-			
-		elif !player_casted:
-			player_casted = true
-			player_character.cast_combat_action(player_action)
-		else:
-			enemy_casted = true
-			enemy_character.cast_combat_action(enemy_action)
-	else:
-		if !enemy_casted_residual:
-			player_character.cast_combat_action(enemy_character.active_residual_damages[current_enemy_residual_index].combat_action)
-			
-			current_enemy_residual_index += 1
-			
-			if current_enemy_residual_index >= enemy_character.active_residual_damages.size():
-				enemy_casted_residual = true
-			
-		elif !player_casted_residual:
-			enemy_character.cast_combat_action(player_character.active_residual_damages[current_player_residual_index].combat_action)
-			
-			current_player_residual_index += 1
-			
-			if current_player_residual_index >= player_character.active_residual_damages.size():
-				player_casted_residual = true
-		elif !enemy_casted:
-			enemy_casted = true
-			enemy_character.cast_combat_action(enemy_action)
-		else:
-			player_casted = true
-			player_character.cast_combat_action(player_action)
+	if current_turn_index >= turns.size():
+		end_turn()
+		return
 	
+	emit_signal("on_next_action_selected", turns[current_turn_index].cast_combat_action())
+	
+	current_turn_index += 1

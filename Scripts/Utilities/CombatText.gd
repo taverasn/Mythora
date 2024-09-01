@@ -1,13 +1,13 @@
 class_name CombatText
 
-static func get_combat_text(combat_action : CombatAction, damage : int, dealer : Character, receiver : Character) -> String:
+static func get_combat_text(combat_action : CombatAction, damage : int, dealer : Character, receiver : Character, first_turn : bool) -> String:
 	var combat_text : String = str(dealer.mythora_data.display_name, " Used ", combat_action.display_name, "!")
 	var effectiveness : Nature.Effectiveness = receiver.nature.effectiveness(combat_action.nature_type)
 	
 	if combat_action.attack_type == CombatAction.AttackType.Status_Condition:
 		combat_text = str(combat_text,
 		get_status_condition_text(combat_action, effectiveness, receiver))
-	elif combat_action.attack_type == CombatAction.AttackType.ResidualDamage:
+	elif combat_action.attack_type == CombatAction.AttackType.ResidualDamage and !first_turn:
 		combat_text = str(receiver.mythora_data.display_name, " is Still Being Effected By ", combat_action.display_name, ".")
 		combat_text = str(
 		combat_text, 

@@ -6,7 +6,7 @@
 [ext_resource type="Resource" uid="uid://1buvnigssvpx" path="res://CombatActions/Water/AquaWhip.tres" id="4_ionsp"]
 [ext_resource type="Resource" uid="uid://cgmdukpix81e8" path="res://CombatActions/None/Slash.tres" id="5_eaa4k"]
 [ext_resource type="Resource" uid="uid://thhy743jksg2" path="res://CombatActions/None/Stomp.tres" id="6_jvwcm"]
-[ext_resource type="Resource" uid="uid://bbru0gvv6gboa" path="res://CombatActions/Fire/ScorchingEmber.tres" id="7_g5pmo"]
+[ext_resource type="Resource" uid="uid://b4qhwiqhkxfyh" path="res://CombatActions/Lightning/Stormstrike.tres" id="7_fmaan"]
 [ext_resource type="Texture2D" uid="uid://ciop3b51srbnb" path="res://Sprites/Dragon.png" id="7_oij6r"]
 
 [resource]
@@ -14,7 +14,7 @@ script = ExtResource("2_c56eu")
 display_name = "Tempestrix"
 nature = ExtResource("1_ob5hk")
 move_set_dict = {}
-starting_combat_actions = Array[ExtResource("3_gspn4")]([ExtResource("4_ionsp"), ExtResource("5_eaa4k"), ExtResource("6_jvwcm"), ExtResource("7_g5pmo")])
+starting_combat_actions = Array[ExtResource("3_gspn4")]([ExtResource("4_ionsp"), ExtResource("5_eaa4k"), ExtResource("6_jvwcm"), ExtResource("7_fmaan")])
 visual = ExtResource("7_oij6r")
 hp = 65
 speed = 90

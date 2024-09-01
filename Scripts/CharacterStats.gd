@@ -10,6 +10,5 @@ func _init(_hp: int, _speed: int, _armor: int, _magic_resist: int, _attack_damag
 	stats[CombatAction.Status.Attack_Damage] = _attack_damage
 	stats[CombatAction.Status.Ability_Power] = _ability_power
 
-# Example usage:
 func get_stat(stat_type: CombatAction.Status) -> int:
 	return stats.get(stat_type, 0)  # Returns the stat value, or 0 if not found
