@@ -109,7 +109,7 @@ func heal(combat_action : CombatAction) -> void:
 
 func cast_combat_action(combat_action : CombatAction) -> void:
 	current_combat_action = combat_action
-	if combat_action.attack_type == CombatAction.AttackType.Regular:
+	if combat_action.attack_type == CombatAction.AttackType.Regular or combat_action.attack_type == CombatAction.AttackType.MultiMoveDamage:
 		attack_style(combat_action)
 	elif combat_action.heal > 0:
 		heal(combat_action)
@@ -119,9 +119,6 @@ func cast_combat_action(combat_action : CombatAction) -> void:
 		else:
 			change_stat(combat_action)
 	elif combat_action.attack_type == CombatAction.AttackType.ResidualDamage:
-		opponent.take_damage(combat_action)
-	elif combat_action.attack_type == CombatAction.AttackType.MultiMoveDamage:
-		attack_style(combat_action)
 		opponent.take_damage(combat_action)
 	elif combat_action.attack_type == CombatAction.AttackType.Status_Condition:
 		opponent.handle_status_condition(combat_action)
