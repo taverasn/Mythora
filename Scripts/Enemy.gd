@@ -21,7 +21,10 @@ func get_combat_action() -> CombatAction:
 		if ca == previous_combat_action:
 			continue
 		
-		if ca.attack_type == CombatAction.AttackType.Status_Condition and select_status_condition(ca):
+		if opponent.calculate_damage(ca) >= opponent.current_stats.get_stat(CharacterStats.Stat.HP):
+			combat_action = ca
+			break
+		elif ca.attack_type == CombatAction.AttackType.Status_Condition and select_status_condition(ca):
 			# Status condition move found, store it if no strong move has been found yet
 			if combat_action == null or opponent.nature.effectiveness(combat_action.nature_type) != Nature.Effectiveness.Strong or combat_action.attack_type != CombatAction.AttackType.Status_Condition:
 				combat_action = ca
