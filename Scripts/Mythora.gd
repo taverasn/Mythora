@@ -7,11 +7,16 @@ var initial_stats : CharacterStats
 var current_stats : CharacterStats
 var current_status_conditions : Array[StatusCondition]
 var cur_level : int
-func _init(_info : Mythora_Info) -> void:
+var is_dead : bool
+func _init(_info : Mythora_Info, _combat_actions : Array[CombatAction] = [], _cur_level : int = 1, _is_dead : bool = false) -> void:
 	info = _info
 	nature = info.nature
-	combat_actions = info.starting_combat_actions
-	cur_level = 1
+	if _combat_actions.size() == 0:
+		combat_actions = info.starting_combat_actions
+	else:
+		combat_actions = _combat_actions
+	cur_level = _cur_level
+	is_dead = _is_dead
 	set_up_stats(info)
 	
 func set_up_stats(_info : Mythora_Info) -> void:
@@ -31,11 +36,11 @@ func set_up_stats(_info : Mythora_Info) -> void:
 		_info.attack_damage,
 		_info.ability_power)
 
-func is_dead() -> bool:
-	return current_stats.get_stat(CharacterStats.Stat.HP) <= 0
-
 func take_damage(combat_action : CombatAction, dealer_stats : CharacterStats) -> void:
 	current_stats.stats[CharacterStats.Stat.HP] -= calculate_damage(combat_action, dealer_stats)
+	if current_stats.get_stat(CharacterStats.Stat.HP) <= 0:
+		current_stats.stats[CharacterStats.Stat.HP] = 0
+		is_dead = true
 
 func heal(combat_action : CombatAction) -> void:
 	current_stats.stats[CharacterStats.Stat.HP] += combat_action.heal
@@ -78,9 +83,9 @@ func calculate_damage(combat_action : CombatAction, dealer_stats : CharacterStat
 func get_resistance_ratio(damage_type : CombatAction.DamageType, dealer_stats : CharacterStats) -> float:
 	var resistance_ratio : float = 1
 	if damage_type == CombatAction.DamageType.Physical:
-		resistance_ratio = dealer_stats.get_stat(CharacterStats.Stat.Attack_Damage) / current_stats.get_stat(CharacterStats.Stat.Armor)
+		resistance_ratio = float(dealer_stats.get_stat(CharacterStats.Stat.Attack_Damage)) / float(current_stats.get_stat(CharacterStats.Stat.Armor))
 	else:
-		resistance_ratio = dealer_stats.get_stat(CharacterStats.Stat.Ability_Power) / current_stats.get_stat(CharacterStats.Stat.Magic_Resist)
+		resistance_ratio = float(dealer_stats.get_stat(CharacterStats.Stat.Ability_Power)) / float(current_stats.get_stat(CharacterStats.Stat.Magic_Resist))
 	return resistance_ratio
 
 func get_health_percentage() -> float:
