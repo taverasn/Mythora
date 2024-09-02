@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Mythora_Res" load_steps=9 format=3 uid="uid://bdwoc5qqaqgt3"]
 
 [ext_resource type="Resource" uid="uid://btdree0c8lpks" path="res://Natures/Water_Nature.tres" id="1_ob5hk"]
-[ext_resource type="Script" path="res://Scripts/Mythora.gd" id="2_c56eu"]
+[ext_resource type="Script" path="res://Scripts/Mythora_Info.gd" id="2_c56eu"]
 [ext_resource type="Script" path="res://Scripts/CombatAction.gd" id="3_gspn4"]
 [ext_resource type="Resource" uid="uid://bkkj8huji8r2g" path="res://CombatActions/Earth/HeavyFeet.tres" id="4_0ypev"]
 [ext_resource type="Resource" uid="uid://1buvnigssvpx" path="res://CombatActions/Water/AquaWhip.tres" id="4_ionsp"]
