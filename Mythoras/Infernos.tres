@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="Mythora" load_steps=9 format=3 uid="uid://cq8gms1x8ifnr"]
+[gd_resource type="Resource" script_class="Mythora_Info" load_steps=8 format=3 uid="uid://cq8gms1x8ifnr"]
 
 [ext_resource type="Resource" uid="uid://db2gxuaaelqmi" path="res://Natures/Fire_Nature.tres" id="1_t1a3d"]
 [ext_resource type="Script" path="res://Scripts/Mythora_Info.gd" id="1_ylfkh"]
@@ -6,7 +6,6 @@
 [ext_resource type="Resource" uid="uid://bbru0gvv6gboa" path="res://CombatActions/Fire/ScorchingEmber.tres" id="4_u40mr"]
 [ext_resource type="Resource" uid="uid://3sq1x7oxxjkt" path="res://CombatActions/Fire/Burnout.tres" id="5_bay8k"]
 [ext_resource type="Resource" uid="uid://dotkujv1jd70k" path="res://CombatActions/Wind/GaleAssault.tres" id="6_cmccw"]
-[ext_resource type="Resource" uid="uid://bkkj8huji8r2g" path="res://CombatActions/Earth/HeavyFeet.tres" id="7_t4w8i"]
 [ext_resource type="Texture2D" uid="uid://cfbteq3dqyi4c" path="res://Sprites/Reptile.png" id="8_gtah6"]
 
 [resource]
@@ -14,7 +13,7 @@ script = ExtResource("1_ylfkh")
 display_name = "Infernos"
 nature = ExtResource("1_t1a3d")
 move_set_dict = {}
-starting_combat_actions = Array[ExtResource("2_dxhru")]([ExtResource("4_u40mr"), ExtResource("5_bay8k"), ExtResource("6_cmccw"), ExtResource("7_t4w8i")])
+starting_combat_actions = Array[ExtResource("2_dxhru")]([ExtResource("4_u40mr"), ExtResource("5_bay8k"), ExtResource("6_cmccw")])
 visual = ExtResource("8_gtah6")
 hp = 90
 speed = 95

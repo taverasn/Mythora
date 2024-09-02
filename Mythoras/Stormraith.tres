@@ -1,12 +1,12 @@
-[gd_resource type="Resource" script_class="Mythora" load_steps=9 format=3 uid="uid://b2w7huprf7jkb"]
+[gd_resource type="Resource" script_class="Mythora_Info" load_steps=9 format=3 uid="uid://b2w7huprf7jkb"]
 
 [ext_resource type="Resource" uid="uid://65khu337uuqm" path="res://Natures/Lightning_Nature.tres" id="1_u17ah"]
 [ext_resource type="Script" path="res://Scripts/Mythora_Info.gd" id="2_y0faq"]
 [ext_resource type="Script" path="res://Scripts/CombatAction.gd" id="3_60wrd"]
 [ext_resource type="Resource" uid="uid://bbru0gvv6gboa" path="res://CombatActions/Fire/ScorchingEmber.tres" id="4_2rwi3"]
 [ext_resource type="Resource" uid="uid://3sq1x7oxxjkt" path="res://CombatActions/Fire/Burnout.tres" id="5_2gp1r"]
+[ext_resource type="Resource" uid="uid://cgmdukpix81e8" path="res://CombatActions/None/Slash.tres" id="5_wrwcd"]
 [ext_resource type="Resource" uid="uid://dotkujv1jd70k" path="res://CombatActions/Wind/GaleAssault.tres" id="6_g2cne"]
-[ext_resource type="Resource" uid="uid://bkkj8huji8r2g" path="res://CombatActions/Earth/HeavyFeet.tres" id="7_swp1k"]
 [ext_resource type="Texture2D" uid="uid://cex8xgaoe8afj" path="res://Assets/goblin 1.png" id="8_rcwkj"]
 
 [resource]
@@ -14,7 +14,7 @@ script = ExtResource("2_y0faq")
 display_name = "Stormraith"
 nature = ExtResource("1_u17ah")
 move_set_dict = {}
-starting_combat_actions = Array[ExtResource("3_60wrd")]([ExtResource("6_g2cne"), ExtResource("7_swp1k"), ExtResource("4_2rwi3"), ExtResource("5_2gp1r")])
+starting_combat_actions = Array[ExtResource("3_60wrd")]([ExtResource("6_g2cne"), ExtResource("5_wrwcd"), ExtResource("4_2rwi3"), ExtResource("5_2gp1r")])
 visual = ExtResource("8_rcwkj")
 hp = 90
 speed = 95
