@@ -215,6 +215,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_1ohqb")
 text = "Combat Action Display Name"
 
 [node name="MythoraSelectionButtons" type="VBoxContainer" parent="UI/Color_Background/Color_CombatActionsListBackground/MarginContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 3
 
@@ -358,7 +359,7 @@ vertical_alignment = 1
 [node name="Enemy" type="Area2D" parent="." node_paths=PackedStringArray("opponent")]
 position = Vector2(760, 176)
 script = ExtResource("9_bckjc")
-mythora_team = Array[ExtResource("6_tt8yd")]([ExtResource("6_b21p8"), ExtResource("7_2k814"), ExtResource("8_pi58d"), ExtResource("10_87nkj"), ExtResource("10_kim5l")])
+mythora_team = Array[ExtResource("6_tt8yd")]([ExtResource("7_2k814"), ExtResource("6_b21p8"), ExtResource("8_pi58d"), ExtResource("10_87nkj"), ExtResource("10_kim5l")])
 opponent = NodePath("../Player")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy"]

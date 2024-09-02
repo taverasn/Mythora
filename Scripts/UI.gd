@@ -106,7 +106,7 @@ func on_click_combat_action(combat_action : CombatAction) -> void:
 func on_click_mythora_swap(mythora_data : Mythora_Res) -> void:
 	get_parent().player_character.mythora_swap_selected(mythora_data)
 	
-	for i in range(combat_action_buttons.size()):
+	for i in range(mythora_swap_buttons.size()):
 		mythora_swap_buttons[i].disabled = true
 
 func on_next_action_selected(combat_message : String) -> void:

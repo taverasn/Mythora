@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="Mythora" load_steps=9 format=3 uid="uid://bdwoc5qqaqgt3"]
+[gd_resource type="Resource" script_class="Mythora_Res" load_steps=9 format=3 uid="uid://bdwoc5qqaqgt3"]
 
 [ext_resource type="Resource" uid="uid://btdree0c8lpks" path="res://Natures/Water_Nature.tres" id="1_ob5hk"]
 [ext_resource type="Script" path="res://Scripts/Mythora.gd" id="2_c56eu"]
