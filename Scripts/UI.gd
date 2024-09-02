@@ -62,12 +62,12 @@ func open_close_menus(open_container : VBoxContainer, close_container : VBoxCont
 
 
 func bind_combat_action_buttons() -> void:
-	var character : Character = get_parent().player_character
+	var mythora : Mythora = get_parent().player_character.current_mythora
 	
 	for i in range(combat_action_buttons.size()):
-		if i < character.combat_actions.size():
+		if i < mythora.combat_actions.size():
 			combat_action_buttons[i].show()
-			var combat_action : CombatAction = character.combat_actions[i]
+			var combat_action : CombatAction = mythora.combat_actions[i]
 			combat_action_buttons[i].text = combat_action.display_name
 			
 			if combat_action_buttons[i].is_connected("pressed", on_click_combat_action.bind(combat_action)):
@@ -81,15 +81,15 @@ func bind_mythora_swap_buttons() -> void:
 	var character : Character = get_parent().player_character
 	
 	for i in range(mythora_swap_buttons.size()):
-		if i < character.mythora_team.size():
+		if i < character.mythora_infos.size():
 			mythora_swap_buttons[i].show()
-			var mythora_data : Mythora_Res = character.mythora_team[i]
-			mythora_swap_buttons[i].text = mythora_data.display_name
+			var mythora_info : Mythora_Info = character.mythora_infos[i]
+			mythora_swap_buttons[i].text = mythora_info.display_name
 			
-			if mythora_swap_buttons[i].is_connected("pressed", on_click_mythora_swap.bind(mythora_data)):
-				mythora_swap_buttons[i].disconnect("pressed", on_click_mythora_swap.bind(mythora_data))
+			if mythora_swap_buttons[i].is_connected("pressed", on_click_mythora_swap.bind(mythora_info)):
+				mythora_swap_buttons[i].disconnect("pressed", on_click_mythora_swap.bind(mythora_info))
 				
-			mythora_swap_buttons[i].connect("pressed", on_click_mythora_swap.bind(mythora_data))
+			mythora_swap_buttons[i].connect("pressed", on_click_mythora_swap.bind(mythora_info))
 		else:
 			mythora_swap_buttons[i].hide()
 
@@ -103,8 +103,8 @@ func on_click_combat_action(combat_action : CombatAction) -> void:
 	for i in range(combat_action_buttons.size()):
 		combat_action_buttons[i].disabled = true
 
-func on_click_mythora_swap(mythora_data : Mythora_Res) -> void:
-	get_parent().player_character.mythora_swap_selected(mythora_data)
+func on_click_mythora_swap(mythora_info : Mythora_Info) -> void:
+	get_parent().player_character.mythora_swap_selected(mythora_info)
 	
 	for i in range(mythora_swap_buttons.size()):
 		mythora_swap_buttons[i].disabled = true

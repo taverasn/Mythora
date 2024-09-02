@@ -1,14 +1,14 @@
 class_name CombatText
 
-static func get_combat_text(combat_action : CombatAction, damage : int, dealer : Character, receiver : Character, first_turn : bool) -> String:
-	var combat_text : String = str(dealer.mythora_data.display_name, " Used ", combat_action.display_name, "!")
+static func get_combat_text(combat_action : CombatAction, damage : int, dealer : Mythora, receiver : Mythora, first_turn : bool) -> String:
+	var combat_text : String = str(dealer.info.display_name, " Used ", combat_action.display_name, "!")
 	var effectiveness : Nature.Effectiveness = receiver.nature.effectiveness(combat_action.nature_type)
 	
 	if combat_action.attack_type == CombatAction.AttackType.Status_Condition:
 		combat_text = str(combat_text,
 		get_status_condition_text(combat_action, effectiveness, receiver))
 	elif combat_action.attack_type == CombatAction.AttackType.ResidualDamage and !first_turn:
-		combat_text = str(receiver.mythora_data.display_name, " is Still Being Effected By ", combat_action.display_name, ".")
+		combat_text = str(receiver.info.display_name, " is Still Being Effected By ", combat_action.display_name, ".")
 		combat_text = str(
 		combat_text, 
 		get_effectiveness_text(effectiveness),
@@ -17,7 +17,7 @@ static func get_combat_text(combat_action : CombatAction, damage : int, dealer :
 		combat_text = str(combat_text,
 		get_effectiveness_text(effectiveness),
 		get_damage_dealt_text(combat_action, damage, dealer),
-		get_status_effect_text(combat_action.status_effected, combat_action.target, effectiveness, dealer.mythora_data.display_name, receiver.mythora_data.display_name))
+		get_status_effect_text(combat_action.status_effected, combat_action.target, effectiveness, dealer.info.display_name, receiver.info.display_name))
 	
 	return combat_text
 
@@ -56,7 +56,7 @@ static func get_status_effect_text(status : CharacterStats.Stat, target : Combat
 	
 	return status_effect_text
 
-static func get_damage_dealt_text(combat_action : CombatAction, damage : int, dealer : Character) -> String:
+static func get_damage_dealt_text(combat_action : CombatAction, damage : int, dealer : Mythora) -> String:
 	var damage_dealt_text : String
 	if combat_action.damage > 0:
 		damage_dealt_text = str(" It Did ", damage, " Damage.")
@@ -79,8 +79,8 @@ static func get_effectiveness_text(effectiveness : Nature.Effectiveness) -> Stri
 	
 	return effectiveness_text
 
-static func get_status_condition_text(combat_action : CombatAction, effectiveness : Nature.Effectiveness, receiver : Character) -> String:
-	var status_condition_text : String = str(get_effectiveness_text(effectiveness), " ", receiver.mythora_data.display_name)
+static func get_status_condition_text(combat_action : CombatAction, effectiveness : Nature.Effectiveness, receiver : Mythora) -> String:
+	var status_condition_text : String = str(get_effectiveness_text(effectiveness), " ", receiver.info.display_name)
 	var status_condition : StatusCondition = StatusCondition.new(combat_action.status_condition, combat_action.nature_type)
 	var damage_defense_multiplier : float = DamageHelpers.damage_defense_multiplier(effectiveness)
 	var percentage_effected : float = status_condition.percentage_effected * 100 * damage_defense_multiplier
@@ -89,15 +89,15 @@ static func get_status_condition_text(combat_action : CombatAction, effectivenes
 		if receiver.current_status_conditions.filter(func(s : StatusCondition): return s.StatusConditionType == status_condition.StatusConditionType).size() > 0:
 			match status_condition.status_condition:
 				StatusCondition.StatusConditionType.Burnout:
-					status_condition_text = str(" ", receiver.mythora_data.display_name, " is already Burnedout.")
+					status_condition_text = str(" ", receiver.info.display_name, " is already Burnedout.")
 				StatusCondition.StatusConditionType.Shocked:
-					status_condition_text = str(" ", receiver.mythora_data.display_name, " is already Shocked.")
+					status_condition_text = str(" ", receiver.info.display_name, " is already Shocked.")
 				StatusCondition.StatusConditionType.Winded:
-					status_condition_text = str(" ", receiver.mythora_data.display_name, " is already Winded.")
+					status_condition_text = str(" ", receiver.info.display_name, " is already Winded.")
 				StatusCondition.StatusConditionType.Soaked:
-					status_condition_text = str(" ", receiver.mythora_data.display_name, " is already Soaked.")
+					status_condition_text = str(" ", receiver.info.display_name, " is already Soaked.")
 				StatusCondition.StatusConditionType.Petrify:
-					status_condition_text = str(" ", receiver.mythora_data.display_name, " is already Petrified.")
+					status_condition_text = str(" ", receiver.info.display_name, " is already Petrified.")
 			return status_condition_text
 	
 	
@@ -124,7 +124,7 @@ static func get_status_condition_text(combat_action : CombatAction, effectivenes
 	
 	return status_condition_text
 
-static func get_swap_text(caster : Character, new_mythora : Mythora_Res) -> String:
-	var swap_text : String = str(caster.mythora_data.display_name, " is being swapped out for ", new_mythora.display_name)
+static func get_swap_text(caster : Mythora, new_mythora : Mythora_Info) -> String:
+	var swap_text : String = str(caster.info.display_name, " is being swapped out for ", new_mythora.display_name)
 	
 	return swap_text

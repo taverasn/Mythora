@@ -21,4 +21,4 @@ func on_update_health() -> void:
 	else:
 		style_box.bg_color = Color("e11e1e")
 	
-	$ProgressBar/Label.text = str(get_parent().current_stats.get_stat(CharacterStats.Stat.HP)) + " / " + str(get_parent().initial_stats.get_stat(CharacterStats.Stat.HP))
+	$ProgressBar/Label.text = str(get_parent().current_mythora.current_stats.get_stat(CharacterStats.Stat.HP)) + " / " + str(get_parent().current_mythora.initial_stats.get_stat(CharacterStats.Stat.HP))

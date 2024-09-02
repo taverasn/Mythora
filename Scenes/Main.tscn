@@ -6,7 +6,7 @@
 [ext_resource type="FontFile" uid="uid://d2wv1gaq3j2so" path="res://Assets/prstart.ttf" id="2_u3vji"]
 [ext_resource type="Script" path="res://Scripts/Character.gd" id="3_siv1e"]
 [ext_resource type="Resource" uid="uid://bdwoc5qqaqgt3" path="res://Mythoras/Tempestrix.tres" id="6_b21p8"]
-[ext_resource type="Script" path="res://Scripts/Mythora.gd" id="6_tt8yd"]
+[ext_resource type="Script" path="res://Scripts/Mythora_Info.gd" id="6_tt8yd"]
 [ext_resource type="Resource" uid="uid://dhdo6t4vmpy3f" path="res://Mythoras/Galehorn.tres" id="7_2k814"]
 [ext_resource type="Texture2D" uid="uid://cfbteq3dqyi4c" path="res://Sprites/Reptile.png" id="8_lx4cl"]
 [ext_resource type="Resource" uid="uid://buqaywn4jj2ab" path="res://Mythoras/Geomor.tres" id="8_pi58d"]
@@ -304,7 +304,7 @@ text = "Tempestrix used Stomp!"
 [node name="Player" type="Area2D" parent="." node_paths=PackedStringArray("opponent")]
 position = Vector2(164, 176)
 script = ExtResource("3_siv1e")
-mythora_team = Array[ExtResource("6_tt8yd")]([ExtResource("7_2k814"), ExtResource("8_pi58d"), ExtResource("10_kim5l"), ExtResource("10_87nkj"), ExtResource("6_b21p8")])
+mythora_infos = Array[ExtResource("6_tt8yd")]([ExtResource("7_2k814"), ExtResource("8_pi58d"), ExtResource("10_kim5l"), ExtResource("10_87nkj"), ExtResource("6_b21p8")])
 opponent = NodePath("../Enemy")
 is_player = true
 
@@ -359,7 +359,7 @@ vertical_alignment = 1
 [node name="Enemy" type="Area2D" parent="." node_paths=PackedStringArray("opponent")]
 position = Vector2(760, 176)
 script = ExtResource("9_bckjc")
-mythora_team = Array[ExtResource("6_tt8yd")]([ExtResource("7_2k814"), ExtResource("6_b21p8"), ExtResource("8_pi58d"), ExtResource("10_87nkj"), ExtResource("10_kim5l")])
+mythora_infos = Array[ExtResource("6_tt8yd")]([ExtResource("10_87nkj"), ExtResource("6_b21p8"), ExtResource("10_kim5l"), ExtResource("8_pi58d"), ExtResource("7_2k814")])
 opponent = NodePath("../Player")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy"]

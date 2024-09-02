@@ -8,12 +8,11 @@ signal on_die(character : Area2D)
 @warning_ignore("unused_signal")
 signal on_combat_action_selected(combat_action : CombatAction, character : Area2D)
 @warning_ignore("unused_signal")
-signal on_mythora_swap_selected(_mythora_data : Mythora_Res, character : Area2D)
+signal on_mythora_swap_selected(_mythora_data : Mythora_Info, character : Area2D)
 
-@export var mythora_team : Array[Mythora_Res]
-var mythora_data : Mythora_Res
-var combat_actions : Array[CombatAction]
-var nature : Nature
+@export var mythora_infos : Array[Mythora_Info]
+var mythora_team : Array[Mythora]
+var current_mythora : Mythora
 
 @export var opponent : Area2D
 @export var is_player : bool
@@ -25,42 +24,25 @@ var cur_level : int
 var start_position : Vector2
 var attack_opponent : bool
 var current_combat_action : CombatAction
-var current_stats : CharacterStats
-var initial_stats : CharacterStats
-
-var current_status_conditions : Array[StatusCondition]
 var casted_residual_damage_active : bool
-
-func set_up(_mythora_data : Mythora_Res) -> void:
-	current_stats = CharacterStats.new(
-		_mythora_data.hp,
-		_mythora_data.speed,
-		_mythora_data.armor,
-		_mythora_data.magic_resist,
-		_mythora_data.attack_damage,
-		_mythora_data.ability_power)
-		
-	initial_stats = CharacterStats.new(
-		_mythora_data.hp,
-		_mythora_data.speed,
-		_mythora_data.armor,
-		_mythora_data.magic_resist,
-		_mythora_data.attack_damage,
-		_mythora_data.ability_power)
 
 func _ready():
 	start_position = position
-	set_up_mythora(mythora_team[0])
+	create_team()
+	set_up_mythora(mythora_team[0].info)
 	$Sprite2D.flip_h = !is_player
 	get_parent().connect("on_begin_turn", on_begin_turn)
 	
 
-func set_up_mythora(_mythora_data : Mythora_Res) -> void:
-	mythora_data = _mythora_data
-	set_up(mythora_data)
-	$Sprite2D.texture = mythora_data.visual
-	combat_actions = mythora_data.starting_combat_actions
-	nature = mythora_data.nature
+func create_team() -> void:
+	for info in mythora_infos:
+		mythora_team.append(Mythora.new(info))
+
+func set_up_mythora(mythora_info : Mythora_Info) -> void:
+	for m in mythora_team:
+		if m.info.display_name == mythora_info.display_name:
+			current_mythora = m
+	$Sprite2D.texture = current_mythora.info.visual
 	emit_signal("on_health_change")
 	
 
@@ -83,32 +65,12 @@ func instantiate_hit_particles(hit_particles : PackedScene) -> void:
 	hit_particles_instance.position = position
 	hit_particles_instance.emitting = true
 
-func take_damage(action : CombatAction) -> void:
-	instantiate_hit_particles(action.hit_particles)
-	
-	# Adjust Damage Based on Type of Nature, Damage and Defenses
-	var damage = calculate_damage(action)
-	
-	current_stats.stats[CharacterStats.Stat.HP] -= damage
-	
+func take_damage(combat_action : CombatAction) -> void:
+	instantiate_hit_particles(combat_action.hit_particles)
+	current_mythora.take_damage(combat_action, opponent.current_mythora.current_stats)
 	emit_signal("on_health_change")
-	
-	if current_stats.get_stat(CharacterStats.Stat.HP) <= 0:
+	if current_mythora.is_dead():
 		die()
-		
-func calculate_damage(combat_action : CombatAction) -> int:
-	var damage = combat_action.damage * DamageHelpers.damage_defense_multiplier(nature.effectiveness(combat_action.nature_type))
-	var damage_factor : float = ((float(2) * float(cur_level) / float(5))) + 2
-	var attack_defense_ratio : CombatAction.DamageType
-	
-	if combat_action.damage_type == CombatAction.DamageType.Physical:
-		attack_defense_ratio = opponent.mythora_data.attack_damage / mythora_data.armor
-	else:
-		attack_defense_ratio = opponent.mythora_data.ability_power / mythora_data.magic_resist
-	
-	var damage_as_float : float = (damage_factor * float(damage) * attack_defense_ratio) / 50.0 + 2.0
-	
-	return int(damage_as_float)
 
 func die() -> void:
 	get_parent().get_node("Death").play()
@@ -117,9 +79,7 @@ func die() -> void:
 
 func heal(combat_action : CombatAction) -> void:
 	instantiate_hit_particles(combat_action.hit_particles)
-	current_stats.stats[CharacterStats.Stat.HP] += combat_action.heal
-	if current_stats.get_stat(CharacterStats.Stat.HP) > initial_stats.get_stat(CharacterStats.Stat.HP):
-		current_stats.stats[CharacterStats.Stat.HP] = initial_stats.get_stat(CharacterStats.Stat.HP)
+	current_mythora.heal(combat_action)
 	emit_signal("on_health_change")
 
 func cast_combat_action(combat_action : CombatAction) -> void:
@@ -138,20 +98,6 @@ func cast_combat_action(combat_action : CombatAction) -> void:
 	elif combat_action.attack_type == CombatAction.AttackType.Status_Condition:
 		opponent.handle_status_condition(combat_action)
 
-func handle_status_condition(combat_action : CombatAction) -> void:
-	# Prevent Duplicate Conditions and From Having More Than 2 Status Conditions
-	if current_status_conditions.size() > 0:
-		if current_status_conditions[0].status_condition == combat_action.status_condition || current_status_conditions.size() >= 2:
-			return
-	
-	var status_condition : StatusCondition = StatusCondition.new(combat_action.status_condition, combat_action.nature_type)
-	
-	current_status_conditions.append(status_condition)
-	
-	var damage_defense_multiplier : float = status_condition.percentage_effected * DamageHelpers.damage_defense_multiplier(nature.effectiveness(combat_action.nature_type))
-	for s in status_condition.statuses_effected:
-		current_stats.stats[s] = int(float(current_stats.get_stat(s)) - (float(current_stats.get_stat(s)) * damage_defense_multiplier))
-
 func attack_style(combat_action : CombatAction) -> void:
 	if combat_action.attack_style == CombatAction.AttackStyle.Melee:
 		get_parent().get_node("Hit").play()
@@ -163,19 +109,13 @@ func attack_style(combat_action : CombatAction) -> void:
 		projectile_instance.position = position
 		get_parent().get_node("Fireball").play()
 
+func handle_status_condition(combat_action : CombatAction) -> void:
+	instantiate_hit_particles(combat_action.hit_particles)
+	current_mythora.handle_status_condition(combat_action)
+
 func change_stat(combat_action : CombatAction):
 	instantiate_hit_particles(combat_action.hit_particles)
-	
-	var status_effect_percentage : float
-	match nature.effectiveness(combat_action.nature_type):
-		Nature.Effectiveness.Weak:
-			status_effect_percentage = 0.05
-		Nature.Effectiveness.Strong:
-			status_effect_percentage = 0.1
-		Nature.Effectiveness.Neutral:
-			status_effect_percentage = 0.2
-	
-	current_stats.stats[combat_action.status_effected] = int(float(current_stats.get_stat(combat_action.status_effected)) - (float(combat_action.status_effected) * status_effect_percentage))
+	current_mythora.change_stat(combat_action)
 
 func on_begin_turn() -> void:
 	pass
@@ -183,8 +123,8 @@ func on_begin_turn() -> void:
 func combat_action_selected(combat_action : CombatAction) -> void:
 	emit_signal("on_combat_action_selected", combat_action, self)
 
-func mythora_swap_selected(_mythora_data : Mythora_Res) -> void:
-	emit_signal("on_mythora_swap_selected", _mythora_data, self)
+func mythora_swap_selected(mythora_info : Mythora_Info) -> void:
+	emit_signal("on_mythora_swap_selected", mythora_info, self)
 
 func get_health_percentage() -> float:
-	return float(current_stats.get_stat(CharacterStats.Stat.HP)) / float(initial_stats.get_stat(CharacterStats.Stat.HP)) * 100
+	return current_mythora.get_health_percentage()

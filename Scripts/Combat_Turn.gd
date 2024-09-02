@@ -14,9 +14,9 @@ func _init(_caster : Character, _turns : int, _combat_action : CombatAction):
 
 func do_turn() -> String:
 	var combat_text : String = CombatText.get_combat_text(combat_action, 
-		caster.opponent.calculate_damage(combat_action), 
-		caster, 
-		caster.opponent,
+		caster.opponent.current_mythora.calculate_damage(combat_action, caster.opponent.current_mythora.current_stats), 
+		caster.current_mythora, 
+		caster.opponent.current_mythora,
 		first_turn)
 	
 	caster.cast_combat_action(combat_action)
