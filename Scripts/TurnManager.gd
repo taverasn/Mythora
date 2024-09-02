@@ -26,6 +26,7 @@ func _ready():
 	player_character.connect("on_combat_action_selected", on_combat_action_selected)
 	player_character.connect("on_mythora_swap_selected", on_mythora_swap_selected)
 	enemy_character.connect("on_combat_action_selected", on_combat_action_selected)
+	enemy_character.connect("on_mythora_swap_selected", on_mythora_swap_selected)
 	begin_next_turn()
 
 func begin_next_turn() -> void:

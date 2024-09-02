@@ -86,7 +86,7 @@ static func get_status_condition_text(combat_action : CombatAction, effectivenes
 	var percentage_effected : float = status_condition.percentage_effected * 100 * damage_defense_multiplier
 	
 	if receiver.current_status_conditions.size() > 0:
-		if receiver.current_status_conditions[0].status_condition == combat_action.status_condition || receiver.current_status_conditions[1].status_condition == combat_action.status_condition:
+		if receiver.current_status_conditions.filter(func(s : StatusCondition): return s.StatusConditionType == status_condition.StatusConditionType).size() > 0:
 			match status_condition.status_condition:
 				StatusCondition.StatusConditionType.Burnout:
 					status_condition_text = str(" ", receiver.mythora_data.display_name, " is already Burnedout.")

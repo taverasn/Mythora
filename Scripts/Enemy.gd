@@ -4,15 +4,46 @@ var previous_combat_action : CombatAction
 
 func on_begin_turn() -> void:
 	if !is_player:
-		determine_combat_action()
+		determine_action()
 
-func determine_combat_action() -> void:
-	var ca : CombatAction = null
+func determine_action() -> void:
 	
-	ca = get_combat_action()
+	if should_swap_mythora():
+		var m : Mythora_Res = null
+		m = get_mythora()
+		if m != null:
+			emit_signal("on_mythora_swap_selected", m, self)
+	else:
+		var ca : CombatAction = null
+		ca = get_combat_action()
+		
+		if ca != null:
+			emit_signal("on_combat_action_selected", ca, self)
 	
-	if ca != null:
-		emit_signal("on_combat_action_selected", ca, self)
+
+func get_mythora() -> Mythora_Res:
+	var m : Mythora_Res = null
+	
+	for mythora in mythora_team:
+		if opponent.nature.effectiveness(mythora.nature.type) == Nature.Effectiveness.Strong:
+			m = mythora
+	
+	if m == null:
+		m = mythora_team[randi() % mythora_team.size()]
+	
+	return m
+
+func should_swap_mythora() -> bool:
+	if mythora_team.size() <= 1:
+		return false
+	
+	if nature.effectiveness(opponent.nature.type) == Nature.Effectiveness.Strong:
+		return true
+	
+	if get_health_percentage() < 10:
+		return true
+	
+	return false
 
 func get_combat_action() -> CombatAction:
 	var combat_action : CombatAction = null

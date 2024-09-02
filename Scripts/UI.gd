@@ -98,7 +98,6 @@ func on_end_turn() -> void:
 
 
 func on_click_combat_action(combat_action : CombatAction) -> void:
-	get_parent().get_node("Hit").play()
 	get_parent().player_character.combat_action_selected(combat_action)
 	
 	for i in range(combat_action_buttons.size()):

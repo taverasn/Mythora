@@ -50,10 +50,10 @@ func set_up(_mythora_data : Mythora_Res) -> void:
 
 func _ready():
 	start_position = position
-	get_parent().connect("on_begin_turn", on_begin_turn)
-	$Sprite2D.flip_h = !is_player
-	
 	set_up_mythora(mythora_team[0])
+	$Sprite2D.flip_h = !is_player
+	get_parent().connect("on_begin_turn", on_begin_turn)
+	
 
 func set_up_mythora(_mythora_data : Mythora_Res) -> void:
 	mythora_data = _mythora_data
