@@ -17,8 +17,6 @@ var player_action : CombatAction
 var enemy_action : CombatAction
 var player_mythora_info : Mythora_Info
 var enemy_mythora_info : Mythora_Info
-var player_selected_different_action : bool
-var enemy_selected_different_action : bool
 
 var turns : Array[Turn]
 var current_turn_index : int
@@ -34,18 +32,15 @@ func _ready():
 	begin_next_turn()
 
 func begin_next_turn() -> void:
-	emit_signal("on_begin_turn")
-	
 	if game_over:
 		turns.clear()
 		emit_signal("on_next_action_selected", "Game Over")
+	else:
+		emit_signal("on_begin_turn")
 
 func end_turn() -> void:
 	emit_signal("on_end_turn")
 	current_turn_index = 0
-	
-	await get_tree().create_timer(next_turn_delay).timeout
-
 	
 	player_mythora_info = null
 	enemy_mythora_info = null
@@ -67,69 +62,50 @@ func on_combat_action_selected(combat_action : CombatAction, character : Area2D)
 		player_action = combat_action
 	elif !character.is_player and enemy_action == null:
 		enemy_action = combat_action
-	
-	if (player_action != null and enemy_action != null):
-		set_turn_order()
-		next_action()
-	elif player_mythora_info != null and enemy_action != null:
-		turns.append(MythoraSwap_Turn.new(player_character, 1, player_mythora_info))
-		add_new_turn(enemy_character, enemy_action)
-		move_mythora_swap_turns_to_front()
-		next_action()
-	elif enemy_mythora_info != null and player_action != null:
-		turns.append(MythoraSwap_Turn.new(enemy_character, 1, enemy_mythora_info))
-		add_new_turn(player_character, player_action)
-		move_mythora_swap_turns_to_front()
-		next_action()
-	elif player_mythora_info != null and enemy_mythora_info != null:
-		turns.append(MythoraSwap_Turn.new(enemy_character, 1, enemy_mythora_info))
-		turns.append(MythoraSwap_Turn.new(player_character, 1, player_mythora_info))
-		move_mythora_swap_turns_to_front()
-		next_action()
+	add_turns()
 
 func on_mythora_swap_selected(mythora : Mythora_Info, character : Area2D) -> void:
 	if player_character == character:
 		player_mythora_info = mythora
 	else:
 		enemy_mythora_info = mythora
-	
+	add_turns()
+
+func add_turns() -> void:
 	if (player_action != null and enemy_action != null):
-		set_turn_order()
+		speed_check()
 		next_action()
 	elif player_mythora_info != null and enemy_action != null:
 		turns.append(MythoraSwap_Turn.new(player_character, 1, player_mythora_info))
 		add_new_turn(enemy_character, enemy_action)
-		move_mythora_swap_turns_to_front()
+		set_turn_order()
 		next_action()
 	elif enemy_mythora_info != null and player_action != null:
 		turns.append(MythoraSwap_Turn.new(enemy_character, 1, enemy_mythora_info))
 		add_new_turn(player_character, player_action)
-		move_mythora_swap_turns_to_front()
+		set_turn_order()
 		next_action()
 	elif player_mythora_info != null and enemy_mythora_info != null:
 		turns.append(MythoraSwap_Turn.new(enemy_character, 1, enemy_mythora_info))
 		turns.append(MythoraSwap_Turn.new(player_character, 1, player_mythora_info))
-		move_mythora_swap_turns_to_front()
+		set_turn_order()
 		next_action()
 
-
-func set_turn_order() -> void:
+func speed_check() -> void:
 	if player_character.current_mythora.current_stats.get_stat(CharacterStats.Stat.Speed) <= enemy_character.current_mythora.current_stats.get_stat(CharacterStats.Stat.Speed):
 		add_new_turn(enemy_character, enemy_action)
 		add_new_turn(player_character, player_action)
 	else:
 		add_new_turn(player_character, player_action)
 		add_new_turn(enemy_character, enemy_action)
-		
-	move_mythora_swap_turns_to_front()
+	set_turn_order()
 
-func move_mythora_swap_turns_to_front():
+func set_turn_order():
 	var mythora_swap_turns : Array[Turn]
 	var status_condition_turns : Array[Turn]
 	var residual_damage_turns : Array[Turn]
 	var remaining_turns : Array[Turn]
-
-	# Separate the turns into mythora_swap_turns and non_mythora_swap_turns
+	
 	for turn : Turn in turns:
 		if turn is MythoraSwap_Turn:
 			mythora_swap_turns.append(turn)
@@ -143,8 +119,7 @@ func move_mythora_swap_turns_to_front():
 				remaining_turns.append(turn)
 		else:
 			remaining_turns.append(turn)
-
-	# Clear the original list and append the sorted elements
+	
 	turns.clear()
 	turns += mythora_swap_turns
 	turns += status_condition_turns
@@ -165,7 +140,6 @@ func add_new_turn(caster : Character, combat_action : CombatAction) -> void:
 	
 	if add_turn:
 		turns.append(Combat_Turn.new(caster, turns_active, combat_action))
-	
 
 func remove_action(combat_action : CombatAction, caster : Character) -> bool:
 	if combat_action == null:
@@ -186,12 +160,13 @@ func remove_action(combat_action : CombatAction, caster : Character) -> bool:
 func next_action() -> void:
 	if current_turn_index == 0:
 		emit_signal("on_first_turn")
+
+	if current_turn_index >= turns.size():
+		end_turn()
+		return
 	
 	emit_signal("on_next_action_selected", turns[current_turn_index].do_turn())
 	current_turn_index += 1
-	
-	if current_turn_index >= turns.size():
-		end_turn()
 
 func on_mythora_died(character : Area2D) -> void:
 	for t in turns:
