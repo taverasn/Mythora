@@ -18,18 +18,27 @@ extends Control
 
 
 var combat_text_label : RichTextLabel
+var can_go_next_turn : bool
 
 func _ready():
 	combat_text_label = $Color_Background/Color_CombatTextBackground/MarginContainer/CombatText
 	combat_text_label.text = ""
 	get_parent().connect("on_begin_turn", on_begin_turn)
 	get_parent().connect("on_end_turn", on_end_turn)
+	get_parent().connect("on_first_turn", on_first_turn)
 	get_parent().connect("on_next_action_selected", on_next_action_selected)
 	bind_action_buttons()
 	bind_mythora_swap_buttons()
 
+func on_first_turn():
+	can_go_next_turn = true
+
 func on_begin_turn() -> void:
 	reset_menus()
+	var character : Character = get_parent().player_character
+	
+	if character.current_mythora.is_dead:
+		open_close_menus(mythora_team_container, actions_container)
 	
 	if get_parent().player_action == null:
 		for i in range(combat_action_buttons.size()):
@@ -37,7 +46,11 @@ func on_begin_turn() -> void:
 		for i in range(action_buttons.size()):
 			action_buttons[i].disabled = false
 		for i in range(mythora_swap_buttons.size()):
-			mythora_swap_buttons[i].disabled = false
+			if i < character.mythora_team.size():
+				if character.mythora_team[i].is_dead or character.mythora_team[i] == character.current_mythora:
+					mythora_swap_buttons[i].disabled = true
+				else:
+					mythora_swap_buttons[i].disabled = false
 	else:
 		for i in range(action_buttons.size()):
 			action_buttons[i].disabled = true
@@ -94,8 +107,9 @@ func bind_mythora_swap_buttons() -> void:
 			mythora_swap_buttons[i].hide()
 
 func on_end_turn() -> void:
-	combat_text_label.text = ""
-
+	if !get_parent().game_over:
+		combat_text_label.text = ""
+	can_go_next_turn = false
 
 func on_click_combat_action(combat_action : CombatAction) -> void:
 	get_parent().player_character.combat_action_selected(combat_action)
@@ -113,6 +127,7 @@ func on_next_action_selected(combat_message : String) -> void:
 	combat_text_label.text = combat_message
 
 func _on_combat_text_gui_input(event):
-	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			get_parent().next_action()
+	if can_go_next_turn:
+		if event is InputEventMouseButton:
+			if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+				get_parent().next_action()
