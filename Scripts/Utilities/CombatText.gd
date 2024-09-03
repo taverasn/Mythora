@@ -128,3 +128,12 @@ static func get_swap_text(caster : Mythora, new_mythora : Mythora_Info) -> Strin
 	var swap_text : String = str(caster.info.display_name, " is being swapped out for ", new_mythora.display_name)
 	
 	return swap_text
+
+static func get_item_text(caster : Character, item_info : Item_Info) -> String:
+	var item_text : String = str(caster.display_name, " is using ", item_info.display_name, " on ", caster.current_mythora.info.display_name, ".")
+	item_text = str(item_text, " ", CharacterStats.Stat.keys()[item_info.stat_effected].replace("_", " "), " will be increased by ", item_info.amount)
+	
+	if item_info.effect_type == Item_Info.Item_Effect_Type.Percent:
+		item_text = str(item_text,  "%")
+	
+	return item_text

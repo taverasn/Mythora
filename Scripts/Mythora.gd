@@ -73,6 +73,12 @@ func change_stat(combat_action : CombatAction):
 	
 	current_stats.stats[combat_action.status_effected] = int(float(current_stats.get_stat(combat_action.status_effected)) - (float(combat_action.status_effected) * status_effect_percentage))
 
+func use_item(item_info : Item_Info) -> void:
+	if item_info.effect_type == Item_Info.Item_Effect_Type.Percent:
+		current_stats.stats[item_info.stat_effected] += (float(current_stats.get_stat(item_info.stat_effected)) * float(item_info.amount)) / 100.0
+	else:
+		current_stats.stats[item_info.stat_effected] += item_info.amount
+
 func calculate_damage(combat_action : CombatAction, dealer_stats : CharacterStats) -> int:
 	var damage = combat_action.damage * DamageHelpers.damage_defense_multiplier(nature.effectiveness(combat_action.nature_type))
 	var damage_factor : float = ((float(2) * float(cur_level) / float(5))) + 2

@@ -10,6 +10,8 @@ signal on_combat_action_selected(combat_action : CombatAction, character : Area2
 @warning_ignore("unused_signal")
 signal on_mythora_swap_selected(_mythora_data : Mythora_Info, character : Area2D)
 @warning_ignore("unused_signal")
+signal on_use_item_selected(_item_info : Item_Info, character : Area2D)
+@warning_ignore("unused_signal")
 signal on_mythora_died(character : Area2D)
 
 @export var mythora_infos : Array[Mythora_Info]
@@ -28,13 +30,22 @@ var attack_opponent : bool
 var current_combat_action : CombatAction
 var casted_residual_damage_active : bool
 
+#Item
+@export var items : Array[Item_Info]
+var backpack : Array[Item]
+
 func _ready():
 	start_position = position
 	create_team()
+	create_backpack()
 	set_up_mythora(mythora_team[0].info)
 	$Sprite2D.flip_h = !is_player
 	get_parent().connect("on_begin_turn", on_begin_turn)
 	
+
+func create_backpack() -> void:
+	for info in items:
+		backpack.append(Item.new(info))
 
 func create_team() -> void:
 	for info in mythora_infos:
@@ -120,6 +131,15 @@ func change_stat(combat_action : CombatAction):
 	instantiate_hit_particles(combat_action.hit_particles)
 	current_mythora.change_stat(combat_action)
 
+func use_item(item_info : Item_Info):
+	var item : Item = backpack[backpack.find(item_info)]
+	item.use()
+	if item.amount <= 0:
+		backpack.pop_at(backpack.find(item_info))
+	
+	current_mythora.use_item(item_info)
+
+
 func on_begin_turn() -> void:
 	pass
 
@@ -128,6 +148,9 @@ func combat_action_selected(combat_action : CombatAction) -> void:
 
 func mythora_swap_selected(mythora_info : Mythora_Info) -> void:
 	emit_signal("on_mythora_swap_selected", mythora_info, self)
+
+func use_item_selected(item_info : Mythora_Info) -> void:
+	emit_signal("on_use_item_selected", item_info, self)
 
 func get_health_percentage() -> float:
 	return current_mythora.get_health_percentage()

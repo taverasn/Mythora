@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://b3d7628yviddv"]
+[gd_scene load_steps=30 format=3 uid="uid://b3d7628yviddv"]
 
 [ext_resource type="Script" path="res://Scripts/TurnManager.gd" id="1_n8bal"]
 [ext_resource type="Texture2D" uid="uid://brcsld272fjki" path="res://Assets/Background.png" id="1_of3bj"]
@@ -31,6 +31,11 @@ bg_color = Color(0.027451, 0.0392157, 0.188235, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rf3r6"]
 bg_color = Color(0.0173778, 0.0248261, 0.14604, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lo2mo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2sc64"]
+bg_color = Color(0.31802, 0.31802, 0.31802, 1)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_71gjr"]
 size = Vector2(16, 18)
 
@@ -60,7 +65,7 @@ next_turn_delay = 0.5
 player_character = NodePath("Player")
 enemy_character = NodePath("Enemy")
 
-[node name="UI" type="Control" parent="." node_paths=PackedStringArray("container", "combat_action_buttons", "mythora_swap_buttons", "mythora_team_container", "combat_actions_container", "actions_container", "action_buttons", "combat_action_button", "team_action_button", "bag_action_button", "flee_action_button")]
+[node name="UI" type="Control" parent="." node_paths=PackedStringArray("container", "combat_action_buttons", "mythora_swap_buttons", "mythora_team_container", "combat_actions_container", "actions_container", "action_buttons", "combat_action_button", "team_action_button", "bag_action_button", "flee_action_button", "back_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -79,6 +84,7 @@ combat_action_button = NodePath("Color_Background/Color_CombatActionsListBackgro
 team_action_button = NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions/Button_Team")
 bag_action_button = NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions/Button_Bag")
 flee_action_button = NodePath("Color_Background/Color_CombatActionsListBackground/MarginContainer/Actions/Button_Flee")
+back_button = NodePath("Color_Background/Color_CombatActionsListBackground/Button_Back")
 
 [node name="Image_Background" type="TextureRect" parent="UI"]
 layout_mode = 1
@@ -268,6 +274,20 @@ theme_override_styles/disabled = SubResource("StyleBoxFlat_rf3r6")
 theme_override_styles/hover = SubResource("StyleBoxFlat_lvj4v")
 theme_override_styles/normal = SubResource("StyleBoxFlat_1ohqb")
 text = "Zephyros"
+
+[node name="Button_Back" type="Button" parent="UI/Color_Background/Color_CombatActionsListBackground"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -45.0
+offset_bottom = 31.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("2_u3vji")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/hover = SubResource("StyleBoxFlat_lo2mo")
+theme_override_styles/normal = SubResource("StyleBoxFlat_2sc64")
+text = "Back"
 
 [node name="Color_CombatTextBackground" type="ColorRect" parent="UI/Color_Background"]
 layout_mode = 1
