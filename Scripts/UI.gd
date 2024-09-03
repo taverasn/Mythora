@@ -7,7 +7,6 @@ extends Control
 @export var bag_container : VBoxContainer
 @export var combat_actions_container : VBoxContainer
 
-
 @export_category("Action Buttons")
 @export var actions_container : VBoxContainer
 @export var action_buttons : Array[Button]
@@ -15,7 +14,6 @@ extends Control
 @export var team_action_button : Button
 @export var bag_action_button : Button
 @export var flee_action_button : Button
-
 
 var combat_text_label : RichTextLabel
 var can_go_next_turn : bool
@@ -35,10 +33,28 @@ func on_first_turn():
 
 func on_begin_turn() -> void:
 	reset_menus()
+	bind_combat_action_buttons()
+
+func bind_action_buttons() -> void:
+	combat_action_button.connect("pressed", open_close_menus.bind(combat_actions_container, actions_container))
+	team_action_button.connect("pressed", open_close_menus.bind(mythora_team_container, actions_container))
+	#bag_action_button.connect("pressed", open_close_menus.bind(bag_container, actions_container))
+	#flee_action_button.connect("pressed", )
+
+func reset_menus():
+	actions_container.visible = true
+	combat_actions_container.visible = false
+	mythora_team_container.visible = false
+	
 	var character : Character = get_parent().player_character
 	
 	if character.current_mythora.is_dead:
 		open_close_menus(mythora_team_container, actions_container)
+		
+	enable_disable_buttons()
+
+func enable_disable_buttons() -> void:
+	var character : Character = get_parent().player_character
 	
 	if get_parent().player_action == null:
 		for i in range(combat_action_buttons.size()):
@@ -54,25 +70,10 @@ func on_begin_turn() -> void:
 	else:
 		for i in range(action_buttons.size()):
 			action_buttons[i].disabled = true
-	
-	bind_combat_action_buttons()
-
-func bind_action_buttons() -> void:
-	combat_action_button.connect("pressed", open_close_menus.bind(combat_actions_container, actions_container))
-	team_action_button.connect("pressed", open_close_menus.bind(mythora_team_container, actions_container))
-	#bag_action_button.connect("pressed", open_close_menus.bind(bag_container, actions_container))
-	#flee_action_button.connect("pressed", )
-	
-
-func reset_menus():
-	actions_container.visible = true
-	combat_actions_container.visible = false
-	mythora_team_container.visible = false
 
 func open_close_menus(open_container : VBoxContainer, close_container : VBoxContainer):
 	open_container.visible = true
 	close_container.visible = false
-
 
 func bind_combat_action_buttons() -> void:
 	var mythora : Mythora = get_parent().player_character.current_mythora
@@ -113,7 +114,6 @@ func on_end_turn() -> void:
 
 func on_click_combat_action(combat_action : CombatAction) -> void:
 	get_parent().player_character.combat_action_selected(combat_action)
-	
 	for i in range(combat_action_buttons.size()):
 		combat_action_buttons[i].disabled = true
 
