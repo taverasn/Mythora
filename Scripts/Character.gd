@@ -9,6 +9,8 @@ signal on_die(character : Area2D)
 signal on_combat_action_selected(combat_action : CombatAction, character : Area2D)
 @warning_ignore("unused_signal")
 signal on_mythora_swap_selected(_mythora_data : Mythora_Info, character : Area2D)
+@warning_ignore("unused_signal")
+signal on_mythora_died(character : Area2D)
 
 @export var mythora_infos : Array[Mythora_Info]
 var mythora_team : Array[Mythora]
@@ -69,13 +71,14 @@ func take_damage(combat_action : CombatAction) -> void:
 	instantiate_hit_particles(combat_action.hit_particles)
 	current_mythora.take_damage(combat_action, opponent.current_mythora.current_stats)
 	emit_signal("on_health_change")
-	if current_mythora.is_dead():
-		die()
+	if is_player and current_mythora.is_dead:
+		mythora_died()
 
-func die() -> void:
+func mythora_died() -> void:
 	get_parent().get_node("Death").play()
-	get_parent().game_over = true
-	queue_free()
+	emit_signal("on_mythora_died", self)
+	if mythora_team.filter(func(m): return !m.is_dead).size() == 0:
+		get_parent().game_over = true
 
 func heal(combat_action : CombatAction) -> void:
 	instantiate_hit_particles(combat_action.hit_particles)

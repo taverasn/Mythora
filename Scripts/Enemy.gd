@@ -4,7 +4,10 @@ var previous_combat_action : CombatAction
 
 func on_begin_turn() -> void:
 	if !is_player:
-		determine_action()
+		if current_mythora.is_dead:
+			mythora_died()
+		else:
+			determine_action()
 
 func determine_action() -> void:
 	
@@ -23,18 +26,19 @@ func determine_action() -> void:
 
 func get_mythora() -> Mythora_Info:
 	var m : Mythora_Info = null
+	var living_mythora_team : Array[Mythora] = mythora_team.filter(func(mythora : Mythora): if mythora.info.display_name != current_mythora.info.display_name: return !mythora.is_dead)
 	
-	for mythora in mythora_team:
+	for mythora in living_mythora_team:
 		if opponent.current_mythora.nature.effectiveness(mythora.nature.type) == Nature.Effectiveness.Strong:
 			m = mythora.info
 	
-	if m == null:
-		m = mythora_team[randi() % mythora_team.size()].info
+	if m == null and living_mythora_team.size() > 0:
+		m = living_mythora_team[randi() % living_mythora_team.size()].info
 	
 	return m
 
 func should_swap_mythora() -> bool:
-	if mythora_team.size() <= 1:
+	if mythora_team.filter(func(m): return !m.is_dead).size() <= 1:
 		return false
 	
 	if current_mythora.nature.effectiveness(opponent.current_mythora.nature.type) == Nature.Effectiveness.Strong:
@@ -108,3 +112,10 @@ func select_status_move(combat_action : CombatAction) -> bool:
 		return true
 	
 	return false
+
+func mythora_died() -> void:
+	super.mythora_died()
+	var m : Mythora_Info = null
+	m = get_mythora()
+	if m != null:
+		emit_signal("on_mythora_swap_selected", m, self)
