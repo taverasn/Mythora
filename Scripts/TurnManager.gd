@@ -44,14 +44,18 @@ func end_turn() -> void:
 	emit_signal("on_end_turn")
 	current_turn_index = 0
 	
-	player_added_turn = false
-	enemy_added_turn = false
-	
 	if remove_action(player_action, player_character):
 		player_action = null
 	
+	if player_action == null:
+		player_added_turn = false
+	
 	if remove_action(enemy_action, enemy_character):
 		enemy_action = null
+		enemy_added_turn = false
+	
+	if enemy_action == null:
+		enemy_added_turn = false
 	
 	for i in range(turns.size() - 1, -1, -1):
 		if turns[i].turns <= 0:
@@ -64,15 +68,15 @@ func on_combat_action_selected(combat_action : CombatAction, character : Area2D)
 		player_action = combat_action
 		add_new_turn(player_character, player_action)
 		player_added_turn = true
-	elif !character.is_player and enemy_action == null:
+	else:
+		enemy_action = combat_action
 		add_new_turn(enemy_character, enemy_action)
 		enemy_added_turn = true
-		enemy_action = combat_action
 		
 	add_turns()
 
 func on_mythora_swap_selected(mythora_info : Mythora_Info, character : Area2D) -> void:
-	if player_character == character:
+	if character.is_player:
 		turns.append(MythoraSwap_Turn.new(player_character, 1, mythora_info))
 		player_added_turn = true
 	else:
@@ -82,7 +86,7 @@ func on_mythora_swap_selected(mythora_info : Mythora_Info, character : Area2D) -
 	add_turns()
 
 func on_use_item_selected(item_info : Item_Info, character : Area2D) -> void:
-	if player_character == character:
+	if character.is_player:
 		turns.append(Item_Turn.new(player_character, 1, item_info))
 		player_added_turn = true
 	else:
@@ -95,21 +99,11 @@ func add_turns() -> void:
 	if !player_added_turn or !enemy_added_turn:
 		return
 	
-	if (player_action != null and enemy_action != null):
-		speed_check()
-		next_action()
-	else:
-		set_turn_order()
-		next_action()
-
-func speed_check() -> void:
-	if player_character.current_mythora.current_stats.get_stat(CharacterStats.Stat.Speed) <= enemy_character.current_mythora.current_stats.get_stat(CharacterStats.Stat.Speed):
-		add_new_turn(enemy_character, enemy_action)
-		add_new_turn(player_character, player_action)
-	else:
-		add_new_turn(player_character, player_action)
-		add_new_turn(enemy_character, enemy_action)
 	set_turn_order()
+	next_action()
+
+func speed_check(turn1 : Turn, turn2 : Turn) -> int:
+	return turn2.caster.current_mythora.current_stats.get_stat(CharacterStats.Stat.Speed) - turn1.caster.current_mythora.current_stats.get_stat(CharacterStats.Stat.Speed)
 
 func set_turn_order():
 	var mythora_swap_turns : Array[Turn]
@@ -133,6 +127,8 @@ func set_turn_order():
 				remaining_turns.append(turn)
 		else:
 			remaining_turns.append(turn)
+	
+	remaining_turns.sort_custom(speed_check)
 	
 	turns.clear()
 	turns += mythora_swap_turns
@@ -185,5 +181,6 @@ func next_action() -> void:
 
 func on_mythora_died(character : Area2D) -> void:
 	for t in turns:
-		if t is Combat_Turn and t.caster == character:
-			turns.remove_at(turns.find(t))
+		if t is Combat_Turn:
+			if t.caster == character || t.combat_action.attack_style != CombatAction.AttackType.MultiMoveDamage:
+				turns.remove_at(turns.find(t))

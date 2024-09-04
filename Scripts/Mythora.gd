@@ -78,6 +78,10 @@ func use_item(item_info : Item_Info) -> void:
 		current_stats.stats[item_info.stat_effected] += (float(current_stats.get_stat(item_info.stat_effected)) * float(item_info.amount)) / 100.0
 	else:
 		current_stats.stats[item_info.stat_effected] += item_info.amount
+	
+	if item_info.stat_effected == CharacterStats.Stat.HP:
+		if current_stats.get_stat(CharacterStats.Stat.HP) > initial_stats.get_stat(CharacterStats.Stat.HP):
+			current_stats.stats[CharacterStats.Stat.HP] = initial_stats.get_stat(CharacterStats.Stat.HP)
 
 func calculate_damage(combat_action : CombatAction, dealer_stats : CharacterStats) -> int:
 	var damage = combat_action.damage * DamageHelpers.damage_defense_multiplier(nature.effectiveness(combat_action.nature_type))

@@ -52,7 +52,7 @@ func bind_bag_buttons() -> void:
 	for i in range(bag_buttons.size()):
 		if i < character.backpack.size():
 			bag_buttons[i].show()
-			var item_info : Item_Info = character.backpack[i]
+			var item_info : Item_Info = character.backpack[i].info
 			bag_buttons[i].text = item_info.display_name
 			
 			if bag_buttons[i].is_connected("pressed", on_click_use_item.bind(item_info)):
@@ -66,6 +66,7 @@ func reset_menus():
 	actions_container.visible = true
 	combat_actions_container.visible = false
 	mythora_team_container.visible = false
+	bag_container.visible = false
 	back_button.visible = false
 	var character : Character = get_parent().player_character
 	

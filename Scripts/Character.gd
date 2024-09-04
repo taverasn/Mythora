@@ -14,6 +14,8 @@ signal on_use_item_selected(_item_info : Item_Info, character : Area2D)
 @warning_ignore("unused_signal")
 signal on_mythora_died(character : Area2D)
 
+@export var display_name : String
+
 @export var mythora_infos : Array[Mythora_Info]
 var mythora_team : Array[Mythora]
 var current_mythora : Mythora
@@ -132,12 +134,16 @@ func change_stat(combat_action : CombatAction):
 	current_mythora.change_stat(combat_action)
 
 func use_item(item_info : Item_Info):
-	var item : Item = backpack[backpack.find(item_info)]
+	if backpack.size() < 1:
+		return
+	
+	var item : Item = backpack.filter(func(i): return i.info == item_info)[0]
 	item.use()
 	if item.amount <= 0:
-		backpack.pop_at(backpack.find(item_info))
+		backpack.pop_at(backpack.find(item))
 	
 	current_mythora.use_item(item_info)
+	emit_signal("on_health_change")
 
 
 func on_begin_turn() -> void:
@@ -149,7 +155,7 @@ func combat_action_selected(combat_action : CombatAction) -> void:
 func mythora_swap_selected(mythora_info : Mythora_Info) -> void:
 	emit_signal("on_mythora_swap_selected", mythora_info, self)
 
-func use_item_selected(item_info : Mythora_Info) -> void:
+func use_item_selected(item_info : Item_Info) -> void:
 	emit_signal("on_use_item_selected", item_info, self)
 
 func get_health_percentage() -> float:

@@ -10,19 +10,21 @@ func on_begin_turn() -> void:
 			determine_action()
 
 func determine_action() -> void:
-	
 	if should_swap_mythora():
 		var m : Mythora_Info = null
 		m = get_mythora()
 		if m != null:
 			emit_signal("on_mythora_swap_selected", m, self)
+	elif should_and_can_use_item():
+		var i : Item_Info = null
+		i = backpack[0].info
+		emit_signal("on_use_item_selected", i, self)
 	else:
 		var ca : CombatAction = null
 		ca = get_combat_action()
 		
 		if ca != null:
 			emit_signal("on_combat_action_selected", ca, self)
-	
 
 func get_mythora() -> Mythora_Info:
 	var m : Mythora_Info = null
@@ -36,6 +38,12 @@ func get_mythora() -> Mythora_Info:
 		m = living_mythora_team[randi() % living_mythora_team.size()].info
 	
 	return m
+
+func should_and_can_use_item() -> bool:
+	if current_mythora.current_stats.get_stat(CharacterStats.Stat.HP) < float(current_mythora.initial_stats.get_stat(CharacterStats.Stat.HP)) * 0.2:
+		if backpack.size() > 0:
+			return true
+	return false
 
 func should_swap_mythora() -> bool:
 	if mythora_team.filter(func(m): return !m.is_dead).size() <= 1:
@@ -96,7 +104,6 @@ func has_combat_action_type(type : CombatAction.AttackType) -> bool:
 
 func combat_action_selected(combat_action : CombatAction) -> void:
 	emit_signal("on_combat_action_selected", combat_action, self)
-	
 
 func select_status_condition(combat_action : CombatAction) -> bool:
 	if opponent.current_mythora.current_status_conditions.size() == 0:
@@ -106,7 +113,7 @@ func select_status_condition(combat_action : CombatAction) -> bool:
 		return true
 	
 	return false
-	
+
 func select_status_move(combat_action : CombatAction) -> bool:
 	if opponent.current_mythora.current_stats.get_stat(combat_action.status_effected) > current_mythora.current_stats.get_stat(combat_action.status_effected):
 		return true
