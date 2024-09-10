@@ -180,7 +180,11 @@ func next_action() -> void:
 	current_turn_index += 1
 
 func on_mythora_died(character : Area2D) -> void:
-	for t in turns:
-		if t is Combat_Turn:
-			if t.caster == character || t.combat_action.attack_style != CombatAction.AttackType.MultiMoveDamage:
-				turns.remove_at(turns.find(t))
+	var index_of_turns_to_delete : Array[int]
+	for i in range(turns.size() - 1, -1, -1):
+		if turns[i] is Combat_Turn:
+			if turns[i].caster == character:
+				turns.pop_at(i)
+			elif  turns[i].combat_action.attack_style != CombatAction.AttackType.MultiMoveDamage && turns[i].caster != character:
+				turns.pop_at(i)
+				
