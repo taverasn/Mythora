@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="Mythora_Info" load_steps=8 format=3 uid="uid://cq8gms1x8ifnr"]
 
 [ext_resource type="Resource" uid="uid://db2gxuaaelqmi" path="res://Resources/Natures/Fire_Nature.tres" id="1_t1a3d"]
-[ext_resource type="Script" path="res://Scripts/Mythora_Info.gd" id="1_ylfkh"]
-[ext_resource type="Script" path="res://Scripts/CombatAction.gd" id="2_dxhru"]
+[ext_resource type="Script" path="res://Scripts/Mythora/Mythora_Info.gd" id="1_ylfkh"]
+[ext_resource type="Script" path="res://Scripts/MoveTypes/CombatAction.gd" id="2_dxhru"]
 [ext_resource type="Resource" uid="uid://bbru0gvv6gboa" path="res://Resources/CombatActions/Fire/ScorchingEmber.tres" id="4_u40mr"]
 [ext_resource type="Resource" uid="uid://3sq1x7oxxjkt" path="res://Resources/CombatActions/Fire/Burnout.tres" id="5_bay8k"]
 [ext_resource type="Resource" uid="uid://dotkujv1jd70k" path="res://Resources/CombatActions/Wind/GaleAssault.tres" id="6_cmccw"]

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="CombatAction" load_steps=3 format=3 uid="uid://cgmdukpix81e8"]
 
 [ext_resource type="PackedScene" uid="uid://6scqq44p0efh" path="res://Scenes/HitParticles/Normal_HitParticles.tscn" id="1_4k2wk"]
-[ext_resource type="Script" path="res://Scripts/CombatAction.gd" id="1_caer2"]
+[ext_resource type="Script" path="res://Scripts/MoveTypes/CombatAction.gd" id="1_caer2"]
 
 [resource]
 script = ExtResource("1_caer2")

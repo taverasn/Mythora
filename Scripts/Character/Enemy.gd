@@ -2,7 +2,7 @@ extends Character
 
 var previous_combat_action : CombatAction
 
-func on_begin_turn() -> void:
+func _on_begin_turn(_msg : Dictionary) -> void:
 	if !is_player:
 		if current_mythora.is_dead:
 			mythora_died()
@@ -14,17 +14,32 @@ func determine_action() -> void:
 		var m : Mythora_Info = null
 		m = get_mythora()
 		if m != null:
-			emit_signal("on_mythora_swap_selected", m, self)
+			var msg : Dictionary = {
+				"Type": "OnMythoraSwapSelected",
+				"MythoraInfo": m,
+				"Character": self
+			}
+			MessageCenter.post_msg(msg)
 	elif should_and_can_use_item():
 		var i : Item_Info = null
 		i = backpack[0].info
-		emit_signal("on_use_item_selected", i, self)
+		var msg : Dictionary = {
+			"Type": "OnUseItemSelected",
+			"ItemInfo": i,
+			"Character": self
+		}
+		MessageCenter.post_msg(msg)
 	else:
 		var ca : CombatAction = null
 		ca = get_combat_action()
 		
 		if ca != null:
-			emit_signal("on_combat_action_selected", ca, self)
+			var msg : Dictionary = {
+				"Type": "OnCombatActionSelected",
+				"CombatAction": ca,
+				"Character": self
+			}
+			MessageCenter.post_msg(msg)
 
 func get_mythora() -> Mythora_Info:
 	var m : Mythora_Info = null
@@ -102,9 +117,6 @@ func has_combat_action_type(type : CombatAction.AttackType) -> bool:
 		
 	return false
 
-func combat_action_selected(combat_action : CombatAction) -> void:
-	emit_signal("on_combat_action_selected", combat_action, self)
-
 func select_status_condition(combat_action : CombatAction) -> bool:
 	if opponent.current_mythora.current_status_conditions.size() == 0:
 		return true
@@ -125,4 +137,9 @@ func mythora_died() -> void:
 	var m : Mythora_Info = null
 	m = get_mythora()
 	if m != null:
-		emit_signal("on_mythora_swap_selected", m, self)
+		var msg : Dictionary = {
+			"Type": "OnMythoraSwapSelected",
+			"MythoraInfo": m,
+			"Character": self
+		}
+		MessageCenter.post_msg(msg)

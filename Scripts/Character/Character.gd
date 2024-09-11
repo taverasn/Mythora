@@ -1,19 +1,6 @@
 extends Area2D
 class_name Character
 
-@warning_ignore("unused_signal")
-signal on_health_change
-@warning_ignore("unused_signal")
-signal on_die(character : Area2D)
-@warning_ignore("unused_signal")
-signal on_combat_action_selected(combat_action : CombatAction, character : Area2D)
-@warning_ignore("unused_signal")
-signal on_mythora_swap_selected(_mythora_data : Mythora_Info, character : Area2D)
-@warning_ignore("unused_signal")
-signal on_use_item_selected(_item_info : Item_Info, character : Area2D)
-@warning_ignore("unused_signal")
-signal on_mythora_died(character : Area2D)
-
 @export var display_name : String
 
 @export var mythora_infos : Array[Mythora_Info]
@@ -42,7 +29,7 @@ func _ready():
 	create_backpack()
 	set_up_mythora(mythora_team[0].info)
 	$Sprite2D.flip_h = !is_player
-	get_parent().connect("on_begin_turn", on_begin_turn)
+	MessageCenter.add_observer(self, "OnBeginTurn", "_on_begin_turn")
 	
 
 func create_backpack() -> void:
@@ -58,7 +45,12 @@ func set_up_mythora(mythora_info : Mythora_Info) -> void:
 		if m.info.display_name == mythora_info.display_name:
 			current_mythora = m
 	$Sprite2D.texture = current_mythora.info.visual
-	emit_signal("on_health_change")
+	
+	var msg = {
+		"Type": "OnHealthChange",
+		"CharacterID": get_instance_id()
+	}
+	MessageCenter.post_msg(msg)
 	
 
 func _process(delta):
@@ -83,20 +75,34 @@ func instantiate_hit_particles(hit_particles : PackedScene) -> void:
 func take_damage(combat_action : CombatAction) -> void:
 	instantiate_hit_particles(combat_action.hit_particles)
 	current_mythora.take_damage(combat_action, opponent.current_mythora.current_stats)
-	emit_signal("on_health_change")
+	
+	var msg = {
+		"Type": "OnHealthChange",
+		"CharacterID": get_instance_id()
+	}
+	MessageCenter.post_msg(msg)
+	
 	if is_player and current_mythora.is_dead:
 		mythora_died()
 
 func mythora_died() -> void:
 	get_parent().get_node("Death").play()
-	emit_signal("on_mythora_died", self)
+	var msg : Dictionary = {
+		"Type": "OnMythoraDied",
+		"Character": self
+	}
+	MessageCenter.post_msg(msg)
 	if mythora_team.filter(func(m): return !m.is_dead).size() == 0:
 		get_parent().game_over = true
 
 func heal(combat_action : CombatAction) -> void:
 	instantiate_hit_particles(combat_action.hit_particles)
 	current_mythora.heal(combat_action)
-	emit_signal("on_health_change")
+	var msg = {
+		"Type": "OnHealthChange",
+		"CharacterID": get_instance_id()
+	}
+	MessageCenter.post_msg(msg)
 
 func cast_combat_action(combat_action : CombatAction) -> void:
 	current_combat_action = combat_action
@@ -143,20 +149,39 @@ func use_item(item_info : Item_Info):
 		backpack.pop_at(backpack.find(item))
 	
 	current_mythora.use_item(item_info)
-	emit_signal("on_health_change")
+	var msg = {
+		"Type": "OnHealthChange",
+		"CharacterID": get_instance_id()
+	}
+	MessageCenter.post_msg(msg)
 
 
-func on_begin_turn() -> void:
+func _on_begin_turn(_msg : Dictionary) -> void:
 	pass
 
 func combat_action_selected(combat_action : CombatAction) -> void:
-	emit_signal("on_combat_action_selected", combat_action, self)
+	var msg : Dictionary = {
+		"Type": "OnCombatActionSelected",
+		"CombatAction": combat_action,
+		"Character": self
+	}
+	MessageCenter.post_msg(msg)
 
 func mythora_swap_selected(mythora_info : Mythora_Info) -> void:
-	emit_signal("on_mythora_swap_selected", mythora_info, self)
+	var msg : Dictionary = {
+		"Type": "OnMythoraSwapSelected",
+		"MythoraInfo": mythora_info,
+		"Character": self
+	}
+	MessageCenter.post_msg(msg)
 
 func use_item_selected(item_info : Item_Info) -> void:
-	emit_signal("on_use_item_selected", item_info, self)
+	var msg : Dictionary = {
+		"Type": "OnUseItemSelected",
+		"ItemInfo": item_info,
+		"Character": self
+	}
+	MessageCenter.post_msg(msg)
 
 func get_health_percentage() -> float:
 	return current_mythora.get_health_percentage()

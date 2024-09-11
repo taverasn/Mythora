@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="CombatAction" load_steps=3 format=3 uid="uid://bkkj8huji8r2g"]
 
-[ext_resource type="Script" path="res://Scripts/CombatAction.gd" id="1_6u1jn"]
+[ext_resource type="Script" path="res://Scripts/MoveTypes/CombatAction.gd" id="1_6u1jn"]
 [ext_resource type="PackedScene" uid="uid://bg5etnlecwsbl" path="res://Scenes/HitParticles/Earth_HitParticles.tscn" id="1_352hh"]
 
 [resource]

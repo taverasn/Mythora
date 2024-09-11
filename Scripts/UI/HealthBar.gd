@@ -6,10 +6,12 @@ func _ready():
 	style_box = StyleBoxFlat.new()
 	$ProgressBar.add_theme_stylebox_override("fill", style_box)
 	style_box.bg_color = Color("14e114")
-	
-	get_parent().connect("on_health_change", on_update_health)
+	MessageCenter.add_observer(self, "OnHealthChange", "_on_update_health")
 
-func on_update_health() -> void:
+func _on_update_health(msg : Dictionary) -> void:
+	if msg.CharacterID != get_parent().get_instance_id():
+		return
+	
 	var health_percentage = get_parent().get_health_percentage()
 	var tween = get_tree().create_tween()
 	tween.tween_property($ProgressBar, "value", health_percentage, .5).set_trans(Tween.TRANS_CUBIC)

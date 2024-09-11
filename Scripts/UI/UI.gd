@@ -24,17 +24,18 @@ var can_go_next_turn : bool
 func _ready():
 	combat_text_label = $Color_Background/Color_CombatTextBackground/MarginContainer/CombatText
 	combat_text_label.text = ""
-	get_parent().connect("on_begin_turn", on_begin_turn)
-	get_parent().connect("on_end_turn", on_end_turn)
-	get_parent().connect("on_first_turn", on_first_turn)
-	get_parent().connect("on_next_action_selected", on_next_action_selected)
+	MessageCenter.add_observer(self, "OnBeginTurn", "_on_begin_turn")
+	MessageCenter.add_observer(self, "OnEndTurn", "_on_end_turn")
+	MessageCenter.add_observer(self, "OnFirstTurn", "_on_first_turn")
+	MessageCenter.add_observer(self, "OnNextActionSelected", "_on_next_action_selected")
+	
 	bind_action_buttons()
 	bind_mythora_swap_buttons()
 
-func on_first_turn():
+func _on_first_turn(_msg : Dictionary):
 	can_go_next_turn = true
 
-func on_begin_turn() -> void:
+func _on_begin_turn(_msg : Dictionary) -> void:
 	reset_menus()
 	bind_combat_action_buttons()
 	bind_bag_buttons()
@@ -131,7 +132,7 @@ func bind_mythora_swap_buttons() -> void:
 		else:
 			mythora_swap_buttons[i].hide()
 
-func on_end_turn() -> void:
+func _on_end_turn(_msg : Dictionary) -> void:
 	if !get_parent().game_over:
 		combat_text_label.text = ""
 	can_go_next_turn = false
@@ -153,8 +154,8 @@ func on_click_use_item(item_info : Item_Info) -> void:
 	for i in range(bag_buttons.size()):
 		bag_buttons[i].disabled = true
 
-func on_next_action_selected(combat_message : String) -> void:
-	combat_text_label.text = combat_message
+func _on_next_action_selected(msg : Dictionary) -> void:
+	combat_text_label.text = msg["Message"]
 
 func _on_combat_text_gui_input(event):
 	if can_go_next_turn:

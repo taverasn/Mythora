@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="Mythora_Info" load_steps=9 format=3 uid="uid://bdwoc5qqaqgt3"]
 
 [ext_resource type="Resource" uid="uid://btdree0c8lpks" path="res://Resources/Natures/Water_Nature.tres" id="1_ob5hk"]
-[ext_resource type="Script" path="res://Scripts/Mythora_Info.gd" id="2_c56eu"]
-[ext_resource type="Script" path="res://Scripts/CombatAction.gd" id="3_gspn4"]
+[ext_resource type="Script" path="res://Scripts/Mythora/Mythora_Info.gd" id="2_c56eu"]
+[ext_resource type="Script" path="res://Scripts/MoveTypes/CombatAction.gd" id="3_gspn4"]
 [ext_resource type="Resource" uid="uid://1buvnigssvpx" path="res://Resources/CombatActions/Water/AquaWhip.tres" id="4_ionsp"]
 [ext_resource type="Resource" uid="uid://de3ix0pa4e34" path="res://Resources/CombatActions/Water/FuryPool.tres" id="5_ylxgv"]
 [ext_resource type="Resource" uid="uid://c522oy51l2e3u" path="res://Resources/CombatActions/Water/Soaked.tres" id="6_6364o"]

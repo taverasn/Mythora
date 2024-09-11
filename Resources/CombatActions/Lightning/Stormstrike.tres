@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c42qbrmswk5g1" path="res://Scenes/HitParticles/Lightning_HitParticles.tscn" id="1_1grw0"]
 [ext_resource type="PackedScene" uid="uid://blpca45igmxp8" path="res://Scenes/Projectile_Fireball.tscn" id="1_hdas0"]
-[ext_resource type="Script" path="res://Scripts/CombatAction.gd" id="1_o3apc"]
+[ext_resource type="Script" path="res://Scripts/MoveTypes/CombatAction.gd" id="1_o3apc"]
 
 [resource]
 script = ExtResource("1_o3apc")
