@@ -4482,4 +4482,3 @@ tile_map_data = PackedByteArray("AAAAAAAAAAASABkAAAABAAAAAAASABkAAAABAAEAAAASABk
 tile_set = SubResource("TileSet_kotbk")
 
 [node name="Player" parent="." instance=ExtResource("2_lqxw6")]
-move_speed = 300.0

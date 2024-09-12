@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+class_name Player
+
 @export var tile_size : int = 16 
 
 ## Maximum Nuber of Tiles that Can Be Moved Per Second
@@ -34,7 +36,7 @@ func _input(event: InputEvent) -> void:
 		elif event.is_action_pressed("Down"):
 			movement_direction = Vector2(0, 1)
 			sprite.look_at(self.position + movement_direction)
-	else:
+	elif !event.is_pressed():
 		movement_direction = Vector2()
 
 func _process(delta: float) -> void:
