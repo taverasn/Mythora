@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Nature" load_steps=2 format=3 uid="uid://btdree0c8lpks"]
+
+[ext_resource type="Script" path="res://Combat/Scripts/Mythora/Nature.gd" id="1_puauf"]
+
+[resource]
+script = ExtResource("1_puauf")
+type = 1
+water_effectiveness = 1
+fire_effectiveness = 1
+wind_effectiveness = 2
+earth_effectiveness = 3
+lightning_effectiveness = 2

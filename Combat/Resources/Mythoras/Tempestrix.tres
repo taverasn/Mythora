@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="Mythora_Info" load_steps=9 format=3 uid="uid://bdwoc5qqaqgt3"]
+
+[ext_resource type="Resource" uid="uid://btdree0c8lpks" path="res://Combat/Resources/Natures/Water_Nature.tres" id="1_ob5hk"]
+[ext_resource type="Script" path="res://Combat/Scripts/Mythora/Mythora_Info.gd" id="2_c56eu"]
+[ext_resource type="Script" path="res://Combat/Scripts/MoveTypes/CombatAction.gd" id="3_gspn4"]
+[ext_resource type="Resource" uid="uid://1buvnigssvpx" path="res://Combat/Resources/CombatActions/Water/AquaWhip.tres" id="4_ionsp"]
+[ext_resource type="Resource" uid="uid://de3ix0pa4e34" path="res://Combat/Resources/CombatActions/Water/FuryPool.tres" id="5_ylxgv"]
+[ext_resource type="Resource" uid="uid://c522oy51l2e3u" path="res://Combat/Resources/CombatActions/Water/Soaked.tres" id="6_6364o"]
+[ext_resource type="Resource" uid="uid://cgmdukpix81e8" path="res://Combat/Resources/CombatActions/None/Slash.tres" id="6_dmqut"]
+[ext_resource type="Texture2D" uid="uid://ciop3b51srbnb" path="res://Sprites/Dragon.png" id="7_oij6r"]
+
+[resource]
+script = ExtResource("2_c56eu")
+display_name = "Tempestrix"
+nature = ExtResource("1_ob5hk")
+move_set_dict = {}
+starting_combat_actions = Array[ExtResource("3_gspn4")]([ExtResource("4_ionsp"), ExtResource("6_6364o"), ExtResource("6_dmqut"), ExtResource("5_ylxgv")])
+visual = ExtResource("7_oij6r")
+hp = 65
+speed = 90
+armor = 65
+magic_resist = 50
+attack_damage = 65
+ability_power = 50

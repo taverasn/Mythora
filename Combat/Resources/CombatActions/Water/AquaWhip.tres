@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="CombatAction" load_steps=4 format=3 uid="uid://1buvnigssvpx"]
+
+[ext_resource type="PackedScene" uid="uid://blpca45igmxp8" path="res://Scenes/Projectile_Fireball.tscn" id="1_ik176"]
+[ext_resource type="PackedScene" uid="uid://dghqmgwbbgodj" path="res://Scenes/HitParticles/Water_HitParticles.tscn" id="1_o7ts8"]
+[ext_resource type="Script" path="res://Combat/Scripts/MoveTypes/CombatAction.gd" id="1_s734t"]
+
+[resource]
+script = ExtResource("1_s734t")
+display_name = "Aqua Whip"
+description = ""
+hit_particles = ExtResource("1_o7ts8")
+turns_active = 0
+heal = 0
+damage = 50
+projectile_scene = ExtResource("1_ik176")
+nature_type = 1
+damage_type = 0
+attack_type = 0
+attack_style = 2
+status_effected = 0
+target = 0
+status_condition = 0

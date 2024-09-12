@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="Mythora_Info" load_steps=9 format=3 uid="uid://dhdo6t4vmpy3f"]
+
+[ext_resource type="Resource" uid="uid://yth67p86brsj" path="res://Combat/Resources/Natures/Wind_Resource.tres" id="1_j24r8"]
+[ext_resource type="Script" path="res://Combat/Scripts/Mythora/Mythora_Info.gd" id="2_m3vu1"]
+[ext_resource type="Script" path="res://Combat/Scripts/MoveTypes/CombatAction.gd" id="3_d0myp"]
+[ext_resource type="Resource" uid="uid://cgmdukpix81e8" path="res://Combat/Resources/CombatActions/None/Slash.tres" id="4_guq4m"]
+[ext_resource type="Resource" uid="uid://3sq1x7oxxjkt" path="res://Combat/Resources/CombatActions/Fire/Burnout.tres" id="5_kaslt"]
+[ext_resource type="Resource" uid="uid://c522oy51l2e3u" path="res://Combat/Resources/CombatActions/Water/Soaked.tres" id="6_1gfky"]
+[ext_resource type="Resource" uid="uid://dotkujv1jd70k" path="res://Combat/Resources/CombatActions/Wind/GaleAssault.tres" id="6_ql558"]
+[ext_resource type="Texture2D" uid="uid://c0may48urlai2" path="res://Assets/bat.png" id="8_quqxm"]
+
+[resource]
+script = ExtResource("2_m3vu1")
+display_name = "Galehorn"
+nature = ExtResource("1_j24r8")
+move_set_dict = {}
+starting_combat_actions = Array[ExtResource("3_d0myp")]([ExtResource("4_guq4m"), ExtResource("5_kaslt"), ExtResource("6_1gfky"), ExtResource("6_ql558")])
+visual = ExtResource("8_quqxm")
+hp = 90
+speed = 95
+armor = 30
+magic_resist = 40
+attack_damage = 55
+ability_power = 50
