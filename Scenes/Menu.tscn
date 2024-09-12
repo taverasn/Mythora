@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://dh41bpvh3lmcx"]
 
 [ext_resource type="Script" path="res://Combat/Scripts/UI/Menu.gd" id="1_umfg2"]
-[ext_resource type="Texture2D" uid="uid://brcsld272fjki" path="res://Assets/Background.png" id="2_qmv0e"]
-[ext_resource type="FontFile" uid="uid://d2wv1gaq3j2so" path="res://Assets/prstart.ttf" id="3_inkdd"]
+[ext_resource type="Texture2D" uid="uid://brcsld272fjki" path="res://Combat/Assets/Background.png" id="2_qmv0e"]
+[ext_resource type="FontFile" uid="uid://d2wv1gaq3j2so" path="res://Combat/Assets/prstart.ttf" id="3_inkdd"]
 
 [node name="Menu" type="Control"]
 layout_mode = 3

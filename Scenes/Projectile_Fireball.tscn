@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://blpca45igmxp8"]
 
-[ext_resource type="Texture2D" uid="uid://csdi4esmtmwyk" path="res://Assets/Circle.png" id="1_d5i1y"]
+[ext_resource type="Texture2D" uid="uid://csdi4esmtmwyk" path="res://Combat/Assets/Circle.png" id="1_d5i1y"]
 [ext_resource type="Script" path="res://Scenes/Projectile.gd" id="2_f60e5"]
 
 [node name="Projectile_Fireball" type="Sprite2D"]

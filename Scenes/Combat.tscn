@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://Combat/Scripts/Turns/TurnManager.gd" id="1_2pbwb"]
 [ext_resource type="Script" path="res://Combat/Scripts/UI/UI.gd" id="2_vavhs"]
-[ext_resource type="Texture2D" uid="uid://brcsld272fjki" path="res://Assets/Background.png" id="3_1sfn6"]
-[ext_resource type="FontFile" uid="uid://d2wv1gaq3j2so" path="res://Assets/prstart.ttf" id="4_lk780"]
+[ext_resource type="Texture2D" uid="uid://brcsld272fjki" path="res://Combat/Assets/Background.png" id="3_1sfn6"]
+[ext_resource type="FontFile" uid="uid://d2wv1gaq3j2so" path="res://Combat/Assets/prstart.ttf" id="4_lk780"]
 [ext_resource type="Script" path="res://Combat/Scripts/Character/Character.gd" id="5_4mi1g"]
 [ext_resource type="Script" path="res://Combat/Scripts/Mythora/Mythora_Info.gd" id="6_ownyy"]
 [ext_resource type="Resource" uid="uid://dhdo6t4vmpy3f" path="res://Combat/Resources/Mythoras/Galehorn.tres" id="7_qevb8"]
@@ -17,9 +17,9 @@
 [ext_resource type="Script" path="res://Combat/Scripts/UI/HealthBar.gd" id="15_t10q1"]
 [ext_resource type="Script" path="res://Combat/Scripts/Character/Enemy.gd" id="16_a3hwb"]
 [ext_resource type="Texture2D" uid="uid://ciop3b51srbnb" path="res://Sprites/Dragon.png" id="17_f6388"]
-[ext_resource type="AudioStream" uid="uid://thfacy7og7v7" path="res://Assets/Audio/Death.ogg" id="18_rfgcg"]
-[ext_resource type="AudioStream" uid="uid://dykwssxpv2v8i" path="res://Assets/Audio/Fireball.ogg" id="19_a61a8"]
-[ext_resource type="AudioStream" uid="uid://bbftyqrkggt27" path="res://Assets/Audio/Hit.ogg" id="20_mqef8"]
+[ext_resource type="AudioStream" uid="uid://thfacy7og7v7" path="res://Combat/Assets/Audio/Death.ogg" id="18_rfgcg"]
+[ext_resource type="AudioStream" uid="uid://dykwssxpv2v8i" path="res://Combat/Assets/Audio/Fireball.ogg" id="19_a61a8"]
+[ext_resource type="AudioStream" uid="uid://bbftyqrkggt27" path="res://Combat/Assets/Audio/Hit.ogg" id="20_mqef8"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yepgq"]
 bg_color = Color(0.0173778, 0.0248261, 0.14604, 1)

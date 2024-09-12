@@ -7,7 +7,7 @@
 [ext_resource type="Resource" uid="uid://3sq1x7oxxjkt" path="res://Combat/Resources/CombatActions/Fire/Burnout.tres" id="5_2gp1r"]
 [ext_resource type="Resource" uid="uid://cgmdukpix81e8" path="res://Combat/Resources/CombatActions/None/Slash.tres" id="5_wrwcd"]
 [ext_resource type="Resource" uid="uid://dotkujv1jd70k" path="res://Combat/Resources/CombatActions/Wind/GaleAssault.tres" id="6_g2cne"]
-[ext_resource type="Texture2D" uid="uid://cex8xgaoe8afj" path="res://Assets/goblin 1.png" id="8_rcwkj"]
+[ext_resource type="Texture2D" uid="uid://cex8xgaoe8afj" path="res://Combat/Assets/goblin 1.png" id="8_rcwkj"]
 
 [resource]
 script = ExtResource("2_y0faq")

@@ -7,7 +7,7 @@
 [ext_resource type="Resource" uid="uid://bbru0gvv6gboa" path="res://Combat/Resources/CombatActions/Fire/ScorchingEmber.tres" id="4_lswxx"]
 [ext_resource type="Resource" uid="uid://dotkujv1jd70k" path="res://Combat/Resources/CombatActions/Wind/GaleAssault.tres" id="6_mkonq"]
 [ext_resource type="Resource" uid="uid://bkkj8huji8r2g" path="res://Combat/Resources/CombatActions/Earth/HeavyFeet.tres" id="7_xpd48"]
-[ext_resource type="Texture2D" uid="uid://bdlmtxebabdl8" path="res://Assets/dragon.png" id="8_oasrp"]
+[ext_resource type="Texture2D" uid="uid://bdlmtxebabdl8" path="res://Combat/Assets/dragon.png" id="8_oasrp"]
 
 [resource]
 script = ExtResource("2_n1tfr")

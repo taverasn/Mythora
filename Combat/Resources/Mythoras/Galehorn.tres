@@ -7,7 +7,7 @@
 [ext_resource type="Resource" uid="uid://3sq1x7oxxjkt" path="res://Combat/Resources/CombatActions/Fire/Burnout.tres" id="5_kaslt"]
 [ext_resource type="Resource" uid="uid://c522oy51l2e3u" path="res://Combat/Resources/CombatActions/Water/Soaked.tres" id="6_1gfky"]
 [ext_resource type="Resource" uid="uid://dotkujv1jd70k" path="res://Combat/Resources/CombatActions/Wind/GaleAssault.tres" id="6_ql558"]
-[ext_resource type="Texture2D" uid="uid://c0may48urlai2" path="res://Assets/bat.png" id="8_quqxm"]
+[ext_resource type="Texture2D" uid="uid://c0may48urlai2" path="res://Combat/Assets/bat.png" id="8_quqxm"]
 
 [resource]
 script = ExtResource("2_m3vu1")
